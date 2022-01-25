@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,7 +25,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/product', [App\Http\Controllers\ProductController::class, 'index'])->name('product');
     Route::post('/add_product', [App\Http\Controllers\ProductController::class, 'store'])->name('add_product');
+    Route::get('/product/edit', [App\Http\Controllers\ProductController::class, 'edit'])->name('edit_product');
+    Route::post('/update_product', [App\Http\Controllers\ProductController::class, 'update'])->name('update_product');
+    Route::get('/product/delete', [App\Http\Controllers\ProductController::class, 'destroy'])->name('delete_product');
 });
-// Auth::routes();
-
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
