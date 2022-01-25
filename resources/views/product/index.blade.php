@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('css')
-
+<link rel="stylesheet" href="{{asset('template/css/jquery-confirm.min.css')}}">
 @endsection
 @section('content')
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -11,7 +11,7 @@
 
     </div>
 </div>
-{{-- @include('flash-message') --}}
+@include('flash-message')
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -56,11 +56,13 @@
                                         @endif
                                     </td>
                                     <td style="text-align: center">
+                                        @if ($item->deactivated_at == NULL)
                                         <a href="#" onclick="edit_product({{$item->pro_id}})"><i class="fa fa-pencil fa-lg"></i></a>
+                                        @endif
                                     </td>
                                     <td style="text-align: center">
                                         @if ($item->deactivated_at == NULL)
-                                        <a href="{{url('delete_product/'.$item->pro_id)}}" data-method="delete"><i style="color: red" class="fa fa-trash-o fa-lg"></i></a>
+                                        <a href="#" onclick="delete_product({{$item->pro_id}})" data-method="delete"><i style="color: red" class="fa fa-trash-o fa-lg"></i></a>
                                         @endif
                                     </td>
                                     </tr>
@@ -88,19 +90,16 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Product Code</label>
-                        <input type="text" placeholder="Enter Product Code" id="pro_code" name="pro_code" onkeyup="generate_barcode();" class="form-control" required="" autocomplete="off" />
+                        <input type="text" placeholder="Enter Product Code" id="pro_code" name="pro_code" class="form-control" required="" autocomplete="off" />
                     </div>
                     <div class="form-group">
                         <label>Unit Of Measure</label>
                         <select class="form-control" required id="unit_of_measure" name="unit_of_measure">
                             <option value="">SELECT</option>
-                            <option value="1">KG</option>
-                            <option value="2">Litre</option>
-                            <option value="3">Packet</option>
-                            <option value="4">Bottle</option>
-                            <option value="5">Cup</option>
-                            <option value="6">Pieces</option>
-                            <option value="7">Other</option>
+                            <option value="1">Tablets</option>
+                            <option value="2">capsules</option>
+                            <option value="3">Bottles</option>
+                            <option value="4">Tubes</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -140,19 +139,16 @@
                     <div class="form-group">
                         <label>Product Code</label>
                         <input type="hidden" id="edit_pro_id" name="edit_pro_id" value="" />
-                        <input type="text" placeholder="Enter Product Code" id="edit_pro_code" name="edit_pro_code" onkeyup="generate_barcode();" class="form-control" required="" autocomplete="off" />
+                        <input type="text" placeholder="Enter Product Code" id="edit_pro_code" name="edit_pro_code" class="form-control" required="" autocomplete="off" />
                     </div>
                     <div class="form-group">
                         <label>Unit Of Measure</label>
                         <select class="form-control" required id="edit_unit_of_measure" name="edit_unit_of_measure">
                             <option value="">SELECT</option>
-                            <option value="1">KG</option>
-                            <option value="2">Litre</option>
-                            <option value="3">Packet</option>
-                            <option value="4">Bottle</option>
-                            <option value="5">Cup</option>
-                            <option value="6">Pieces</option>
-                            <option value="7">Other</option>
+                            <option value="1">Tablets</option>
+                            <option value="2">capsules</option>
+                            <option value="3">Bottles</option>
+                            <option value="4">Tubes</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -162,14 +158,6 @@
                     <div class="form-group">
                         <label>Buying Price</label>
                         <input type="text" placeholder="Enter Buying Price" id="edit_buying_price" name="edit_buying_price" class="form-control" required="" autocomplete="off" />
-                    </div>
-                    <div class="form-group">
-                        <label>Market Price</label>
-                        <input type="text" placeholder="Enter Market Price" id="edit_market_price" name="edit_market_price" class="form-control" required="" autocomplete="off" />
-                    </div>
-                    <div class="form-group">
-                        <label>Wholesale Price</label>
-                        <input type="text" placeholder="Enter wholesale price" id="edit_wholesale_price" name="edit_wholesale_price" class="form-control" required="" autocomplete="off" />
                     </div>
                     <div class="form-group">
                         <label>Retailer Price</label>
@@ -187,7 +175,7 @@
 <!----- END MODAL -->
 @endsection
 @section('js')
-
+<script src="{{asset('template/js/jquery-confirm.min.js')}}"></script>
 <script type="text/javascript">
     function toggle_product_model() {
         $('#product-modal').modal();
@@ -200,46 +188,78 @@
         $("#retailer_price").val("");
     }
 
-    function generate_barcode(){
-        $.ajax({
-            url: "{{ url('/product/barcode') }}",
-            type: 'POST',
-            data: {
-                pro_code: $('#pro_code').val(),
-                "_token": "{{ csrf_token() }}",
-            },
-            success: function (data) {
-                var barcode = data;
-                document.getElementById('barcode').innerHTML = barcode;
+    function edit_product(id){
+        $.confirm({
+            title: 'Confirm?',
+            content: 'Are you sure do you want to edit this item ?',
+            type: 'green',
+            buttons: {
+                Okey: {
+                    text: 'Yes',
+                    btnClass: 'btn-blue',
+                    action: function () {
+                        $.ajax({
+                            type: "GET",
+                            url: "{{ url('/product/edit') }}",
+                            data: {
+                                "id": id,
+                                "_token": "{{ csrf_token() }}"
+                            },
+                            success: function (data) {
+                                $('#product-edit-modal').modal('show');
+                                $("#edit_pro_id").val(data.pro_id);
+                                $("#edit_pro_code").val(data.pro_code);
+                                $("#edit_unit_of_measure").val(data.measure_of_units);
+                                $("#edit_pro_name").val(data.pro_name);
+                                $("#edit_buying_price").val(data.buying_price);
+                                $("#edit_retailer_price").val(data.retailer_price);
+                            }
+                        });
+                    }
+                },
+                cancel: {
+                    text: 'No',
+                    btnClass: 'btn-red',
+                    action: function () {
+
+                    }
+                }
             }
         });
     }
 
-    function edit_product(id){
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                type: "GET",
-                url: "{{ url('/product/edit') }}",
-                data: {
-                    id: id
+    function delete_product(id){
+        $.confirm({
+            title: 'Confirm?',
+            content: 'Are you sure do you want to remove this item ?',
+            type: 'green',
+            buttons: {
+                Okey: {
+                    text: 'Yes',
+                    btnClass: 'btn-blue',
+                    action: function () {
+                        $.ajax({
+                            type: "GET",
+                            url: "{{ url('/product/delete') }}",
+                            data: {
+                                "id": id,
+                                "_token": "{{ csrf_token() }}"
+                            },
+                            success: function (data) {
+                                location.reload();
+                            }
+                        });
+                    }
                 },
-                success: function (data) {
-                    console.log(data);
-                    $('#product-edit-modal').modal('show');
-                    $("#edit_pro_id").val(data.pro_id);
-                    $("#edit_pro_code").val(data.pro_code);
-                    $("#edit_unit_of_measure").val(data.measure_of_units);
-                    $("#edit_pro_name").val(data.pro_name);
-                    $("#edit_buying_price").val(data.buying_price);
-                    $("#edit_market_price").val(data.market_price);
-                    $("#edit_wholesale_price").val(data.wholesale_price);
-                    $("#edit_retailer_price").val(data.retailer_price);
+                cancel: {
+                    text: 'No',
+                    btnClass: 'btn-red',
+                    action: function () {
+
+                    }
                 }
-            });
-        }
+            }
+        });
+    }
 </script>
 @endsection

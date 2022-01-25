@@ -24,23 +24,40 @@ class ProductController extends Controller
         ]);
 
         if($product){
-            $notification=array(
-                'message'=>"Category has been added",
-                'alert-type'=>'success',
-            );
-            return back()->with($notification);
-            // toastr()->success('RECORD HAS BEEN SUCCESSFULLY INSERTED!');
-            // return redirect('product');
-            // return redirect()->route('product')->with('success', 'RECORD HAS BEEN SUCCESSFULLY INSERTED!');
+            return redirect()->route('product')->with('success', 'RECORD HAS BEEN SUCCESSFULLY INSERTED!');
         } else {
-            $notification=array(
-                'message'=>"Category has not been added",
-                'alert-type'=>'error',
-            );
-            return back()->with($notification);
-            // toastr()->success('RECORD HAS NOT BEEN SUCCESSFULLY INSERTED!');
-            // return redirect('product');
-            // return redirect()->route('product')->with('error', 'RECORD HAS NOT BEEN SUCCESSFULLY INSERTED!');
+            return redirect()->route('product')->with('error', 'RECORD HAS NOT BEEN SUCCESSFULLY INSERTED!');
+        }
+    }
+
+    public function edit(Request $request){
+        $product = Product::find($request->id);
+        return $product;
+    }
+
+    public function update(Request $request){
+        $product = Product::find($request->edit_pro_id);
+        $product->pro_code = $request->edit_pro_code;
+        $product->pro_name = $request->edit_pro_name;
+        $product->measure_of_units = $request->edit_unit_of_measure;
+        $product->buying_price = $request->edit_buying_price;
+        $product->retailer_price = $request->edit_retailer_price;
+        $product->save();
+        if($product){
+            return redirect('product')->with('success', 'RECORD HAS BEEN SUCCESSFULLY UPDATED!');
+        } else {
+            return redirect('product')->with('error', 'RECORD HAS NOT BEEN SUCCESSFULLY UPDATED!');
+        }
+    }
+
+    public function destroy(Request $request){
+        $product = Product::find($request->id);
+        $product->deactivated_at = date('Y-m-d H:i:s');
+        $product->save();
+        if($product){
+            return redirect('product')->with('success', 'RECORD HAS BEEN SUCCESSFULLY DELETED!');
+        } else {
+            return redirect('product')->with('error', 'RECORD HAS NOT BEEN SUCCESSFULLY DELETED!');
         }
     }
 }
