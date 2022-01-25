@@ -23,9 +23,16 @@ Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+    /**PRODUCT MODULE */
     Route::get('/product', [App\Http\Controllers\ProductController::class, 'index'])->name('product');
     Route::post('/add_product', [App\Http\Controllers\ProductController::class, 'store'])->name('add_product');
     Route::get('/product/edit', [App\Http\Controllers\ProductController::class, 'edit'])->name('edit_product');
     Route::post('/update_product', [App\Http\Controllers\ProductController::class, 'update'])->name('update_product');
     Route::get('/product/delete', [App\Http\Controllers\ProductController::class, 'destroy'])->name('delete_product');
+    /**END PRODUCT MODULE */
+    /**GRN MODULE */
+    Route::get('/grn', [App\Http\Controllers\GrnController::class, 'index'])->name('grn');
+    Route::post('/add_grn', [App\Http\Controllers\GrnController::class, 'store'])->name('add_grn');
+    /**END GRN MODULE */
 });
