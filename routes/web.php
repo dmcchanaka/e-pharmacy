@@ -33,6 +33,13 @@ Route::group(['middleware' => ['auth']], function () {
     /**END PRODUCT MODULE */
     /**GRN MODULE */
     Route::get('/grn', [App\Http\Controllers\GrnController::class, 'index'])->name('grn');
+    Route::get('/grn/product', [App\Http\Controllers\GrnController::class, 'indget_productex']);
+    Route::get('/grn/products', [App\Http\Controllers\GrnController::class, 'get_products']);
+    Route::get('/grn/price', [App\Http\Controllers\GrnController::class, 'search_product_price']);
     Route::post('/add_grn', [App\Http\Controllers\GrnController::class, 'store'])->name('add_grn');
+
+    Route::get('view_grn', [App\Http\Controllers\GrnController::class, 'view_grn']);
+    Route::get('/grn/search', [App\Http\Controllers\GrnController::class, 'search']);
+    Route::get('/display_grn/{id}', [App\Http\Controllers\GrnController::class, 'show']);
     /**END GRN MODULE */
 });

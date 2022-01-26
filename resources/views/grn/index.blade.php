@@ -14,6 +14,7 @@
 
     </div>
 </div>
+@include('flash-message')
 <form action="{{url('add_grn')}}" method="post" name="grn_form" id="grn_form" onsubmit="grn_validation();">
 @csrf
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -71,7 +72,7 @@
                                     <th style="text-align: center">&nbsp</th>
                                     <th style="text-align: center">Description</th>
                                     <th style="text-align: center">Price</th>
-                                    <th style="text-align: center">Qty/KG/Litre</th>
+                                    <th style="text-align: center">Qty</th>
                                     <th style="text-align: center">Amount</th>
                                     <th style="text-align: center">&nbsp</th>
                                 </tr>
@@ -91,24 +92,6 @@
                                 </tr>
                             </tbody>
                             <tbody>
-                                {{-- <tr id="tr_1">
-                                    <td style="text-align: center">
-                                        <span class="fa fa-plus fa-lg" style="cursor: pointer" onclick="gen_item();"></span>
-                                    </td>
-                                    <td>
-                                        <input type="text" id="pro_name_1" name="pro_name_1" class="col-md-12 form-control form-control-sm" onclick="load_product('1')" autocomplete="off" />
-                                        <input type="hidden" id="pro_id_1" name="pro_id_1" value="" />
-                                    </td>
-                                    <td>
-                                        <input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="price_1" name="price_1" size="5" readonly />
-                                        <input type="hidden" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="prc_1" name="prc_1" size="5" />
-                                    </td>
-                                    <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="qty_1" name="qty_1" onkeyup="check_qty(event, '1');" size="5" autocomplete="off" /></td>
-                                    <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="line_amt_1" name="line_amt_1" size="5" readonly /></td>
-                                    <td style="text-align: center">
-                                        <span class="fa fa-minus-circle fa-lg" style="cursor: pointer;" onclick="remove_item('1');"></span>
-                                    </td>
-                                </tr> --}}
                                 <input type="hidden" id="item_count" name="item_count" value="0" />
                             </tbody>
                             <tfoot>
@@ -151,7 +134,6 @@
         $('#item_count').val(num);
         $('#grn_table').append('<tr class="even pointer" id="tr_' + num + '">'
             + '<td style="text-align: center">'
-                // +'<span class="fa fa-plus fa-lg" style="cursor: pointer" onclick="gen_item();"></span>'
             + '</td>'
             + '<td>'
                 +'<input type="text" id="pro_name_' + num + '" name="pro_name_' + num + '" class="col-md-12 form-control form-control-sm" onclick="load_product('+ num +')" autocomplete="off" readonly />'
