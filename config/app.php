@@ -166,6 +166,7 @@ return [
          * Package Service Providers...
          */
         Venturecraft\Revisionable\RevisionableServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
 
         /*
          * Application Service Providers...
