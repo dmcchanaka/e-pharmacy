@@ -42,4 +42,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/grn/search', [App\Http\Controllers\GrnController::class, 'search']);
     Route::get('/display_grn/{id}', [App\Http\Controllers\GrnController::class, 'show']);
     /**END GRN MODULE */
+    /**INVOICE MODULE */
+    Route::get('test_print', [App\Http\Controllers\InvoiceController::class, 'test_print'])->name('test_print');
+    /**END INVOICE MODULE */
 });
