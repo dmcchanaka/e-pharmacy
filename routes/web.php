@@ -44,5 +44,8 @@ Route::group(['middleware' => ['auth']], function () {
     /**END GRN MODULE */
     /**INVOICE MODULE */
     Route::get('test_print', [App\Http\Controllers\InvoiceController::class, 'test_print'])->name('test_print');
+    Route::get('invoice', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoice');
+    Route::get('/invoice/product', [App\Http\Controllers\InvoiceController::class, 'search_product']);
+    Route::get('/invoice/price', [App\Http\Controllers\InvoiceController::class, 'search_product_price']);
     /**END INVOICE MODULE */
 });
