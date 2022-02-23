@@ -47,4 +47,9 @@ class Invoice extends Model
             return 'CREDIT/DEBIT CARD';
         }
     }
+
+    public function getDoctor(){
+        $doctor = Doctor::find($this->doctor_id);
+        if($doctor) return $doctor->doctor_name;
+    }
 }
