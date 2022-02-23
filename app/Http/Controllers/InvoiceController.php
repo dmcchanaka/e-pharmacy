@@ -162,13 +162,93 @@ class InvoiceController extends Controller{
 
             DB::commit();
 
-            // return redirect()->route('print_invoice',['id' => $lastInvoice->invoice_id]);
-            return redirect()->route('invoice')->with('success', 'RECORD HAS BEEN SUCCESSFULLY INSERTED!');
+            return redirect()->route('print_invoice',['id' => $lastInvoice->invoice_id]);
+            // return redirect()->route('invoice')->with('success', 'RECORD HAS BEEN SUCCESSFULLY INSERTED!');
 
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->route('invoice')->with('error', 'RECORD HAS NOT BEEN SUCCESSFULLY INSERTED!');
         }
+    }
+
+    public function print_invoice($id){
+        $invoice = Invoice::find($id);
+        $invoice_product = DB::table('invoice_product as ip')
+            ->join('product as p', 'p.pro_id', 'ip.pro_id')
+            ->whereNull('p.deleted_at')
+            ->whereNull('ip.deleted_at')
+            ->where('ip.invoice_id', $id)
+            ->groupBy('p.pro_id')
+            ->orderBy('p.pro_name')
+            ->get();
+
+            try {
+                // Enter the share name for your USB printer here
+                // $connector = null;
+                $connector = new WindowsPrintConnector("EPSON TM-T81III Receipt"); //shared printer name
+            
+                $printer = new Printer($connector);
+                $printer->setFont(Printer::FONT_B); // Dot Matrix - Default
+                $printer->setJustification(Printer::JUSTIFY_CENTER);
+                $printer->setTextSize(2, 1); //text size
+                $printer->text("CITIZENS HOSPITAL (PVT) LTD\n");
+                $printer->setTextSize(1, 1);
+                $printer->text("No.338/1, Nugagoda junction, Bandaragama road, Waskaduwa.\n");
+                $printer->text("TP - 034 22 30 840 | 070 35 14 555 \n");
+
+                $printer->text("--------------------------------------------------------------\n");
+                $printer->setJustification(Printer::JUSTIFY_LEFT);
+                $printDate = sprintf('%s %-13.40s',"Date & Time :",Date('Y-m-d H:i:s'));
+                $printer->text($printDate. "\n");
+                $invNo = sprintf('%s %-13.40s',"Reference No :",$invoice->invoice_no);
+                $printer->text($invNo. "\n");
+                $paymentType = NULL;
+                if($invoice->payment_type == 1){
+                    $paymentType = 'Cash';
+                } elseif($invoice->payment_type == 2){
+                    $paymentType = 'Credit/Debit Card';
+                }
+                $invNo = sprintf('%s %-13.40s',"Payment Type :",$paymentType);
+                $printer->text($invNo. "\n");
+
+                $printer->text("--------------------------------------------------------------\n");
+                $printer->setJustification(Printer::JUSTIFY_LEFT);
+                $printer->setEmphasis(true);
+                $printer->text("Code              Description          Qty          Amount\n");
+                $printer->setEmphasis(false);
+                $gross = 0;
+                foreach ($invoice_product as $key=>$item) {
+                   $gross+= $item->ip_line_amt;
+
+                    $line = sprintf('%s. %-13.40s %-3.40s',($key+1),$item->pro_code,$item->pro_name,$item->ip_qty);
+                    $lineNew = sprintf('%40s %18s',$item->ip_qty,$item->ip_line_amt);
+                    $printer -> text("$line\n");
+                    $printer -> text("$lineNew\n");
+                }
+                $printer->text("--------------------------------------------------------------");
+
+                $grandLine = sprintf('%40s %20.2f',"Net Total",$gross);
+                $printer->text($grandLine);
+                $printer -> text("\n");
+                $printer->text("--------------------------------------------------------------");
+                $printer -> text("\n");
+
+                $printer->selectPrintMode();
+
+                /* Footer */
+                $printer->feed(2);
+                $printer->setJustification(Printer::JUSTIFY_CENTER);
+                $printer->text("THANK YOU.PLEASE COME AGAIN.\n");
+                $printer->feed(2);
+
+                $printer -> cut();
+                
+                /* Close printer */
+                $printer -> close();
+            } catch (Exception $e) {
+                echo "Couldn't print to this printer: " . $e -> getMessage() . "\n";
+            }
+            return redirect()->route('invoice');
     }
 
     public function view_invoice(){
@@ -229,6 +309,12 @@ class InvoiceController extends Controller{
             }
         })
         ->make(true);
+    }
+
+    public function show($id){
+        $invoice = Invoice::find($id);
+        $invoiceItem = InvoiceProduct::where('invoice_id',$id)->orderBy('line_no')->get();
+        return view('invoice.display',['invoice'=>$invoice,'invoiceItem'=>$invoiceItem]);
     }
 
     public function test_print(){
