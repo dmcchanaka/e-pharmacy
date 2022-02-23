@@ -42,4 +42,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/grn/search', [App\Http\Controllers\GrnController::class, 'search']);
     Route::get('/display_grn/{id}', [App\Http\Controllers\GrnController::class, 'show']);
     /**END GRN MODULE */
+    /**INVOICE MODULE */
+    Route::get('test_print', [App\Http\Controllers\InvoiceController::class, 'test_print'])->name('test_print');
+    Route::get('invoice', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoice');
+    Route::get('/invoice/product', [App\Http\Controllers\InvoiceController::class, 'search_product']);
+    Route::get('/invoice/price', [App\Http\Controllers\InvoiceController::class, 'search_product_price']);
+    Route::get('/invoice/stock', [App\Http\Controllers\InvoiceController::class, 'search_product_stock']);
+    Route::post('add_invoice', [App\Http\Controllers\InvoiceController::class, 'store']);
+
+    Route::get('view_invoice', [App\Http\Controllers\InvoiceController::class, 'view_invoice']);
+    Route::get('/invoice/search', [App\Http\Controllers\InvoiceController::class, 'search']);
+    /**END INVOICE MODULE */
 });

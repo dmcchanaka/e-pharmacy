@@ -12,6 +12,7 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
+        "mike42/escpos-php": "^3.0",
         "venturecraft/revisionable": "1.*",
         "yajra/laravel-datatables-oracle": "~9.0"
     },
