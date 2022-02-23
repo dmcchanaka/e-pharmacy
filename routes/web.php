@@ -47,5 +47,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('invoice', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoice');
     Route::get('/invoice/product', [App\Http\Controllers\InvoiceController::class, 'search_product']);
     Route::get('/invoice/price', [App\Http\Controllers\InvoiceController::class, 'search_product_price']);
+    Route::get('/invoice/stock', [App\Http\Controllers\InvoiceController::class, 'search_product_stock']);
+    Route::post('add_invoice', [App\Http\Controllers\InvoiceController::class, 'store']);
+
+    Route::get('view_invoice', [App\Http\Controllers\InvoiceController::class, 'view_invoice']);
+    Route::get('/invoice/search', [App\Http\Controllers\InvoiceController::class, 'search']);
     /**END INVOICE MODULE */
 });

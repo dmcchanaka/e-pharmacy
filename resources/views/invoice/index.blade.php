@@ -51,9 +51,9 @@
                                     <td class="text-left" colspan="4">
                                         <select id="doctor_id" name="doctor_id" class="form-control form-control-sm" onchange="select_doctor()">
                                             <option value="">SELECT DOCTOR</option>
-                                            <option value="1">DOCTOR 01</option>
-                                            <option value="2">DOCTOR 02</option>
-                                            <option value="3">DOCTOR 03</option>
+                                            @foreach ($doctors as $item)
+                                            <option value="{{$item->doctor_id}}">{{$item->doctor_name}}</option>
+                                            @endforeach
                                         </select>
                                     </td>
                                 </tr>
@@ -84,6 +84,7 @@
                                     <th style="text-align: center">&nbsp</th>
                                     <th style="text-align: center">Description</th>
                                     <th style="text-align: center">Price</th>
+                                    <th style="text-align: center">Stock</th>
                                     <th style="text-align: center">Qty/KG/Litre</th>
                                     <th style="text-align: center">Amount</th>
                                     <th style="text-align: center">&nbsp</th>
@@ -91,7 +92,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="5">
+                                    <td colspan="6">
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label">FIND OR SCAN ITEM OR RECEIPT</label>
                                             <div class="col-lg-9">
@@ -126,6 +127,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
+                                    <td>&nbsp;</td>
                                     <td>&nbsp;</td>
                                     <td>&nbsp;</td>
                                     <td>&nbsp;</td>
@@ -194,11 +196,14 @@
                 +'<input type="text" id="pro_name_' + num + '" name="pro_name_' + num + '" class="col-md-12 form-control form-control-sm" onclick="load_product('+ num +')" autocomplete="off" readonly />'
                 +'<input type="hidden" id="pro_id_' + num + '" name="pro_id_' + num + '" value="" />'
                 +'<input type="hidden" id="pro_uom_' + num + '" name="pro_uom_' + num + '" value="" />'
-
             + '</td>'
             + '<td>'
                 +'<input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="price_' + num + '" name="price_' + num + '" size="5" readonly />'
                 +'<input type="hidden" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="prc_' + num + '" name="prc_' + num + '" size="5" />'
+            +'</td>'
+            + '<td>'
+                +'<input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="stock_' + num + '" name="stock_' + num + '" size="5" readonly />'
+                +'<input type="hidden" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="stk_' + num + '" name="stk_' + num + '" size="5" />'
             +'</td>'
             + '<td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="qty_' + num + '" name="qty_' + num + '" onkeyup="check_qty(event, '+ num +');" size="5" autocomplete="off" /></td>'
             + '<td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="line_amt_' + num + '" name="line_amt_' + num + '" onkeyup="check_qty(event, '+ num +');" size="5" readonly /></td>'
@@ -276,7 +281,7 @@
                         $("#pro_uom_" + num).val(pro_type);
 
                         load_price(num, ui.item.id);
-
+                        load_stock(num, ui.item.id);
                     }
                 }
             });
@@ -368,6 +373,34 @@
         });
     }
 
+    /* LOAD PRODUCT STOCK */
+    function load_stock(num,item_id){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "{{ url('/invoice/stock') }}",
+            data: {
+                item_id: $('#pro_id_'+ num).val()
+            },
+            success: function (data) {
+                if (data.stock > 0) {
+                    var stock = data.stock;
+                    $('#stock_' + num).val(stock);
+                    $('#stk_' + num).val(stock);
+                } else {
+                    $('#stock_' + num).val(0);
+                    $('#stk_' + num).val(0);
+                }
+                $("#product_name").val("");
+                $("#product_id").val("");
+            }
+        });
+    }
+
     /*REMOVE GENERATED ROW*/
     function remove_item(num) {
         if (parseFloat($('#item_count').val()) != 1) {
@@ -430,6 +463,33 @@
                 type: 'green',
                 content: 'Enter valid Weight Or Volume'
             });
+        } else if(parseInt($('#qty_' + i).val()) > parseInt($('#stock_' + i).val()) && parseInt($('#stock_' + i).val())>0){
+            var qty = parseFloat(document.getElementById('stock_' + i).value).toFixed(0);
+
+            if (isNaN(qty)) {
+                qty = 0;
+            }
+            $('#qty_' + i).val(qty);
+            $.alert({
+                title: 'Alert',
+                icon: 'fa fa-warning',
+                type: 'green',
+                content: 'Stock is not enough'
+            });
+        } else if(parseInt($('#stock_' + i).val())===0){
+            var qty = parseFloat(document.getElementById('stock_' + i).value).toFixed(0);
+
+            if (isNaN(qty)) {
+                qty = 0;
+            }
+            $('#qty_' + i).val(qty);
+            $.alert({
+                title: 'Alert',
+                icon: 'fa fa-warning',
+                type: 'green',
+                content: 'Stock is not enough'
+            });
+            remove_item(i);
         }
         calc_amount();
     }

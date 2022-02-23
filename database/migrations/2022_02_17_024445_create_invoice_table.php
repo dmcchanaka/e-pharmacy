@@ -19,8 +19,11 @@ class CreateInvoiceTable extends Migration
             $table->string('invoice_no')->unique();
             $table->dateTime('invoice_date')->nullable();
             $table->decimal('invoice_gross_amt',20,2)->nullable();
+            $table->decimal('invoice_discount_per',20,2)->nullable();
             $table->decimal('invoice_discount',20,2)->nullable();
             $table->decimal('invoice_net_amt',20,2)->nullable();
+            $table->unsignedBigInteger('doctor_id')->nullable();
+            $table->foreign('doctor_id')->references('doctor_id')->on('doctors');
 
             $table->unsignedBigInteger('added_by')->nullable();
             $table->foreign('added_by')->references('u_id')->on('users');

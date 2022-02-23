@@ -19,8 +19,10 @@ class Invoice extends Model
         'invoice_no',
         'invoice_date',
         'invoice_gross_amt',
+        'invoice_discount_per',
         'invoice_discount',
         'invoice_net_amt',
+        'doctor_id',
         'added_by',
         'payment_type'
     ];
