@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-md-3"></div>
     <div class="col-md-6">
-        <div class="ibox-content">
+        <div class="ibox-content" style="background-color: rgba(255, 255, 255, 0.5)">
             <form class="m-t" role="form" method="POST" action="{{ route('login') }}">
                 @csrf
                 <div class="form-group">
