@@ -107,7 +107,7 @@
                         <input type="text" placeholder="Enter Product Name" id="pro_name" name="pro_name" class="form-control" required="" autocomplete="off" />
                     </div>
                     <div class="form-group">
-                        <label>Buying Price</label>
+                        <label>Wholesale Price</label>
                         <input type="text" placeholder="Enter Buying Price" id="buying_price" name="buying_price" class="form-control" required="" autocomplete="off" />
                     </div>
                     <div class="form-group">

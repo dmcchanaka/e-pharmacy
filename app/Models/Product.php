@@ -22,4 +22,15 @@ class Product extends Model{
         'retailer_price',
         'deactivated_at'
     ];
+
+    public static function getProductCode(){
+        $productNo = NULL;
+        $proNo = Product::max('pro_code');
+        if($proNo){
+            $productNo = str_pad($proNo,5,0,STR_PAD_LEFT);
+        } else {
+            $productNo = str_pad(1,5,0,STR_PAD_LEFT);
+        }
+        return 'aaaaa';
+    }
 }

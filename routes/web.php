@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Reports\ProductWiseStockReportController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -55,4 +56,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/invoice/search', [App\Http\Controllers\InvoiceController::class, 'search']);
     Route::get('/display_invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'show']);
     /**END INVOICE MODULE */
+
+    /**REPORT MODULE */
+    Route::group(['prefix' => 'reports'], function () {
+        Route::group(['prefix' => 'stock'], function () {
+            Route::get('load', [ProductWiseStockReportController::class, 'index']);
+            Route::post('search', [ProductWiseStockReportController::class, 'search']);
+        });
+    });
+    /**END REPORT MODULE */
 });

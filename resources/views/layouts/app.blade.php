@@ -60,6 +60,12 @@
                         <li><a href="{{ url('view_invoice') }}">VIEW</a></li>
                     </ul>
                 </li>
+                <li>
+                    <a href="#"><i class="fa fa-book"></i> <span class="nav-label">REPORTS </span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="{{ url('reports/stock/load') }}">STOCK</a></li>
+                    </ul>
+                </li>
             </ul>
 
         </div>
