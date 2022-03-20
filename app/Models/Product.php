@@ -20,7 +20,8 @@ class Product extends Model{
         'measure_of_units',
         'buying_price',
         'retailer_price',
-        'deactivated_at'
+        'deactivated_at',
+        'expiry_date'
     ];
 
     public static function getProductCode(){
@@ -31,6 +32,6 @@ class Product extends Model{
         } else {
             $productNo = str_pad(1,5,0,STR_PAD_LEFT);
         }
-        return 'aaaaa';
+        return $productNo;
     }
 }

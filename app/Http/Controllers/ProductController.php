@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\InvoiceProduct;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -20,7 +21,8 @@ class ProductController extends Controller
             'buying_price'=>$request->buying_price,
             'market_price'=>$request->market_price,
             'wholesale_price'=>$request->wholesale_price,
-            'retailer_price'=>$request->retailer_price
+            'retailer_price'=>$request->retailer_price,
+            'expiry_date'=>$request->expiry_date,
         ]);
 
         if($product){
@@ -42,6 +44,7 @@ class ProductController extends Controller
         $product->measure_of_units = $request->edit_unit_of_measure;
         $product->buying_price = $request->edit_buying_price;
         $product->retailer_price = $request->edit_retailer_price;
+        $product->expiry_date = $request->edit_expiry_date;
         $product->save();
         if($product){
             return redirect('product')->with('success', 'RECORD HAS BEEN SUCCESSFULLY UPDATED!');
@@ -51,13 +54,18 @@ class ProductController extends Controller
     }
 
     public function destroy(Request $request){
-        $product = Product::find($request->id);
-        $product->deactivated_at = date('Y-m-d H:i:s');
-        $product->save();
-        if($product){
-            return redirect('product')->with('success', 'RECORD HAS BEEN SUCCESSFULLY DELETED!');
+        $invoice = InvoiceProduct::where('pro_id',$request->id)->get();
+        if($invoice->isEmpty()){
+            $product = Product::find($request->id);
+            $product->deactivated_at = date('Y-m-d H:i:s');
+            $product->save();
+            if($product){
+                return redirect('product')->with('success', 'RECORD HAS BEEN SUCCESSFULLY DELETED!');
+            } else {
+                return redirect('product')->with('error', 'RECORD HAS NOT BEEN SUCCESSFULLY DELETED!');
+            }
         } else {
-            return redirect('product')->with('error', 'RECORD HAS NOT BEEN SUCCESSFULLY DELETED!');
+            return redirect('product')->with('error', 'SYSTEM IS NOT ALLOWING TO REMOVE THIS ITEM. THIS ITEM IS INCLUDING SOME INVOICE!');
         }
     }
 }
