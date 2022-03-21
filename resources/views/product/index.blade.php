@@ -112,7 +112,12 @@
                     </div>
                     <div class="form-group">
                         <label>Retailer Price</label>
-                        <input type="text" placeholder="Enter retailer price" id="retailer_price" name="retailer_price" class="form-control" required="" autocomplete="off" />
+                        <input type="text" placeholder="Enter retailer price" id="retailer_price" name="retailer_price" onkeyup="checkProductProfit()" class="form-control" required="" autocomplete="off" />
+                        <span id="product_profit"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Expiry Date</label>
+                        <input type="date" id="expiry_date" name="expiry_date" class="form-control" required="" autocomplete="off" />
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -163,6 +168,10 @@
                         <label>Retailer Price</label>
                         <input type="text" placeholder="Enter retailer price" id="edit_retailer_price" name="edit_retailer_price" class="form-control" required="" autocomplete="off" />
                     </div>
+                    <div class="form-group">
+                        <label>Expiry Date</label>
+                        <input type="date" id="edit_expiry_date" name="edit_expiry_date" class="form-control" required="" autocomplete="off" />
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
@@ -186,6 +195,20 @@
         $("#market_price").val("");
         $("#wholesale_price").val("");
         $("#retailer_price").val("");
+        $("#expiry_date").val("");
+    }
+
+    setTimeout(checkProductProfit, 3000)
+
+    function checkProductProfit(){
+        var wholesalePrice = parseFloat($('#buying_price').val());
+        var retailerPrice = parseFloat($('#retailer_price').val());
+        const span = document.getElementById('product_profit');
+        var profit = retailerPrice - wholesalePrice;
+        console.log(retailerPrice + wholesalePrice);
+        if(!isNaN(profit)){
+            span.textContent = 'Product profit is '+ profit;
+        } 
     }
 
     function edit_product(id){
@@ -213,6 +236,7 @@
                                 $("#edit_pro_name").val(data.pro_name);
                                 $("#edit_buying_price").val(data.buying_price);
                                 $("#edit_retailer_price").val(data.retailer_price);
+                                $("#edit_expiry_date").val(data.retailer_price);
                             }
                         });
                     }

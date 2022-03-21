@@ -64,6 +64,7 @@
                     <a href="#"><i class="fa fa-book"></i> <span class="nav-label">REPORTS </span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{ url('reports/stock/load') }}">STOCK</a></li>
+                        <li><a href="{{ url('reports/expiry-product/load') }}">EXPIRY PRODUCTS</a></li>
                     </ul>
                 </li>
             </ul>

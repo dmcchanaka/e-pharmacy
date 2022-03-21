@@ -7,7 +7,8 @@
 @section('content')
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
-        <h2>Product wise stock report</h2>
+        <h2>Product expiry report</h2>
+        <h5>This products will expire withing next two weeks</h5>
     </div>
     <div class="col-lg-2">
 
@@ -60,7 +61,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12">
-            <div id="stk_details"></div>
+            <div id="exp_details"></div>
         </div>
     </div>
 </div>
@@ -78,24 +79,24 @@ $(document).ready(function(){
     });
 });
 function search() {
-            $.ajax({
-                type: "POST",
-                url: "{{ url('/reports/stock/search') }}",
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    'pro_id': $('#pro_id').val(),
-                },
-                cache: false,
-                beforeSend: function() { 
-                    $("#stk_details").html('<div style="text-align:center"><img class="logo-img" src="{{ asset('template/images/loading.gif') }}" style="height:100px;weight:100px"></div>');
-                },
-                success: function (html) {
-                    $("#stk_details").html('');
-                    $("#stk_details").html(html).show('slow');
-                },
-                complete: function (data) {
-                }
-            });
-    }
+    $.ajax({
+        type: "POST",
+        url: "{{ url('/reports/expiry-product/search') }}",
+        data: {
+            "_token": "{{ csrf_token() }}",
+            'pro_id': $('#pro_id').val(),
+        },
+        cache: false,
+        beforeSend: function() { 
+            $("#exp_details").html('<div style="text-align:center"><img class="logo-img" src="{{ asset('template/images/loading.gif') }}" style="height:100px;weight:100px"></div>');
+        },
+        success: function (html) {
+            $("#exp_details").html('');
+            $("#exp_details").html(html).show('slow');
+        },
+        complete: function (data) {
+        }
+    });
+}
 </script>
 @endsection
