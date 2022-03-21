@@ -65,6 +65,7 @@
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{ url('reports/stock/load') }}">STOCK</a></li>
                         <li><a href="{{ url('reports/expiry-product/load') }}">EXPIRY PRODUCTS</a></li>
+                        <li><a href="{{ url('reports/daily-sales-summary/load') }}">DAILY SALES SUMMARY</a></li>
                     </ul>
                 </li>
             </ul>

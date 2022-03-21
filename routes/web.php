@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Reports\DailySalesSummaryReportController;
 use App\Http\Controllers\Reports\ExpiryProductReportController;
 use App\Http\Controllers\Reports\ProductWiseStockReportController;
 use Illuminate\Support\Facades\Auth;
@@ -68,6 +69,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::group(['prefix' => 'expiry-product'], function () {
             Route::get('load', [ExpiryProductReportController::class, 'index']);
             Route::post('search', [ExpiryProductReportController::class, 'search']);
+        });
+        /**DAILY SALES REPORT */
+        Route::group(['prefix' => 'daily-sales-summary'], function () {
+            Route::get('load', [DailySalesSummaryReportController::class, 'index']);
+            Route::post('search', [DailySalesSummaryReportController::class, 'search']);
         });
     });
     /**END REPORT MODULE */
