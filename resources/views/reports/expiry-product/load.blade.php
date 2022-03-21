@@ -6,7 +6,7 @@
                 <thead class="thead-custom">
                     <tr>
                         <th style="text-align: center">PRODUCT</th>
-                        <th style="text-align: center">COST PRICE</th>
+                        <th style="text-align: center">WHOLESALE PRICE</th>
                         <th style="text-align: center">EXPIRY DATE</th>
                         <th style="text-align: center">STATE</th>
                         <th style="text-align: center">REMAINING QTY</th>

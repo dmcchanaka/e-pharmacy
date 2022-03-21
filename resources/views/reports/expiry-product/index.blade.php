@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('css')
 <link href="{{ asset('template/css/plugins/dataTables/datatables.min.css')}}" rel="stylesheet">
+
+<link href="{{ asset('template/css/select2.min.css') }}" rel="stylesheet" />
 @endsection
 @section('content')
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -68,7 +70,14 @@
 @section('js')
 <script src="{{ asset('template/js/plugins/dataTables/datatables.min.js')}}"></script>
 <script src="{{ asset('template/js/plugins/dataTables/dataTables.bootstrap4.min.js')}}"></script>
+
+<script src="{{asset('template/js/select2.min.js') }}"></script>
 <script type="text/javascript">
+$(document).ready(function(){
+    $("#pro_id").select2({
+        maximumSelectionLength: 2
+    });
+});
 function search() {
     $.ajax({
         type: "POST",
