@@ -50,7 +50,6 @@
                                     <td>:</td>
                                     <td class="text-left" colspan="4">
                                         <select id="doctor_id" name="doctor_id" class="form-control form-control-sm" onchange="select_doctor()">
-                                            <option value="">SELECT DOCTOR</option>
                                             @foreach ($doctors as $item)
                                             <option value="{{$item->doctor_id}}">{{$item->doctor_name}}</option>
                                             @endforeach
@@ -105,24 +104,6 @@
                                 </tr>
                             </tbody>
                             <tbody>
-                                {{-- <tr id="tr_1">
-                                    <td style="text-align: center">
-                                        <span class="fa fa-plus fa-lg" style="cursor: pointer" onclick="gen_item();"></span>
-                                    </td>
-                                    <td>
-                                        <input type="text" id="pro_name_1" name="pro_name_1" class="col-md-12 form-control form-control-sm" onclick="load_product('1')" autocomplete="off" />
-                                        <input type="hidden" id="pro_id_1" name="pro_id_1" value="" />
-                                    </td>
-                                    <td>
-                                        <input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="price_1" name="price_1" size="5" readonly />
-                                        <input type="hidden" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="prc_1" name="prc_1" size="5" />
-                                    </td>
-                                    <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="qty_1" name="qty_1" onkeyup="check_qty(event, '1');" size="5" autocomplete="off" /></td>
-                                    <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="line_amt_1" name="line_amt_1" size="5" readonly /></td>
-                                    <td style="text-align: center">
-                                        <span class="fa fa-minus-circle fa-lg" style="cursor: pointer;" onclick="remove_item('1');"></span>
-                                    </td>
-                                </tr> --}}
                                 <input type="hidden" id="item_count" name="item_count" value="0" />
                             </tbody>
                             <tfoot>
@@ -137,28 +118,72 @@
                                     </td>
                                     <td>&nbsp;</td>
                                 </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td style="padding-top: 20px;text-align: right;font-weight:bold">Dicount %</td>
+                                    <td colspan="1" style="text-align: right;padding-right: 5px">
+                                        <input type="text" style="text-align: right;padding-right: 5px;font-weight:bold" class="col-md-12 form-control form-control-sm" id="discount" name="discount" size="10" />
+                                    </td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                
                             </tfoot>
                         </table>
                     </div>
+                    <h3 style="background-color: #b4b4b4;padding:5px;border-radius:3px">Other charges</h3><hr/>
                     <div class="row">
                         <div class="col-md-2 col-sm-12 col-xs-12 form-group"></div>
                         <div class="col-md-8 col-sm-12 col-xs-12 form-group text-center">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-1">
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group row">
+                                <div class="col-md-10">
+                                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align: center">&nbsp</th>
+                                                <th style="text-align: center">Fee Type</th>
+                                                <th style="text-align: center">Amount</th>
+                                                <th style="text-align: center">&nbsp</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="other_fees">
+                                            <tr id="tr_1">
+                                                <td style="text-align: center;padding-top:15px">
+                                                    <span class="fa fa-plus fa-lg" style="cursor: pointer" onclick="gen_other_item();"></span>
+                                                </td>
+                                                <td>
+                                                    <select id="other_type_1" name="other_type_1" class="form-control form-control-sm" onchange="select_pay_type()">
+                                                        <option value="0">SELECT</option>
+                                                        @foreach ($otherFees as $other)
+                                                        <option value="{{$other->fee_id}}">{{$other->fee_description}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                                <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="other_amt_1" name="other_amt_1" size="5" readonly /></td>
+                                                <td style="text-align: center;padding-top:15px">
+                                                    <span class="fa fa-minus-circle fa-lg" style="cursor: pointer;" onclick="remove_other_item('1');"></span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <input type="hidden" id="other_item_count" name="other_item_count" value="1" />
+                                        <input type="hidden" id="delete_other_item_count" name="delete_other_item_count" value="1" />
+                                    </table>
+                                    {{-- <div class="form-group row">
                                         <label for="inputEmail" class="col-sm-4 col-form-label">PAYMENT TYPE</label>
                                         <div class="col-sm-8">
                                             <select id="payment_type" name="payment_type" class="form-control form-control-sm" onchange="select_pay_type()">
-                                                {{-- <option value="0">SELECT PAYMENT TYPE</option> --}}
+                                                <option value="0">SELECT PAYMENT TYPE</option>
                                                 <option value="1">CASH</option>
                                                 <option value="2">DEBIT/CREDIT CARD</option>
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-1">
                                 </div>
                             </div>
                         </div>
@@ -184,6 +209,32 @@
 <script src="{{asset('template/js/jquery-ui.js')}}"></script>
 
 <script type="text/javascript">
+    /* GENERATE OTHER NEW ROW*/
+    function gen_other_item(){
+        var item_count = parseInt($('#other_item_count').val());
+        var next_count = item_count + 1;
+        $('#other_item_count').val(next_count);
+        var delete_count = parseInt($('#delete_other_item_count').val());
+        var delete_next_count = delete_count + 1;
+        $('#delete_other_item_count').val(delete_next_count);
+
+        
+        $('#other_fees').append('<tr class="even pointer" id="tr_' + next_count + '">'
+            + '<td style="text-align: center;padding-top:15px">'
+                +'<span class="fa fa-plus fa-lg" style="cursor: pointer" onclick="gen_item();"></span>'
+            + '</td>'
+            + '<td>'
+                + '<select id="other_type_' + next_count + '" name="other_type_' + next_count + '" class="form-control form-control-sm" onchange="select_pay_type()">'
+                    + '<option value="0">SELECT</option>'
+                + '</select>'
+            + '</td>'
+            + '<td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="other_amt_' + next_count + '" name="other_amt_' + next_count + '" size="5" readonly /></td>'
+            + '<td style="text-align: center;padding-top:15px">'
+                + '<span class="fa fa-minus-circle fa-lg" style="cursor: pointer" onclick="remove_other_item(' + next_count + ');"></span>'
+            + '</td>'
+        + '</tr>');
+    }
+    /**/
     /* GENERATE NEW ROW */
     function gen_item(){
         var num = parseFloat($('#item_count').val()) + 1;

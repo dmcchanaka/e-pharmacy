@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Doctor;
 use App\Models\Invoice;
 use App\Models\InvoiceProduct;
+use App\Models\OtherFee;
 use App\Models\Product;
 use App\Models\ReceivedStock;
 use Exception;
@@ -19,7 +20,8 @@ class InvoiceController extends Controller{
 
     public function index(){
         $doctors = Doctor::get();
-        return view('invoice.index', compact('doctors'));
+        $otherFees = OtherFee::get();
+        return view('invoice.index', compact('doctors','otherFees'));
     }
 
     public function search_product(Request $request){
