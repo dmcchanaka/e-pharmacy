@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Doctor;
 use App\Models\Invoice;
+use App\Models\InvoiceOtherFee;
 use App\Models\InvoiceProduct;
+use App\Models\OtherFee;
 use App\Models\Product;
 use App\Models\ReceivedStock;
 use Exception;
@@ -19,7 +21,8 @@ class InvoiceController extends Controller{
 
     public function index(){
         $doctors = Doctor::get();
-        return view('invoice.index', compact('doctors'));
+        $otherFees = OtherFee::get();
+        return view('invoice.index', compact('doctors','otherFees'));
     }
 
     public function search_product(Request $request){
@@ -51,6 +54,16 @@ class InvoiceController extends Controller{
         return $price;
     }
 
+    public function search_other_fee(Request $request){
+        $other_fee = OtherFee::get();
+        return $other_fee;
+    }
+
+    public function search_other_fee_by_id(Request $request){
+        $other_fee = OtherFee::find($request->other_type);
+        return $other_fee;
+    }
+
     public function search_product_stock(Request $request){
         $received_stk = ReceivedStock::where('pro_id',$request->item_id)->where('rs_remaining_qty','>',0)->get();
         return ['stock'=>$received_stk->sum('rs_remaining_qty')];
@@ -72,12 +85,15 @@ class InvoiceController extends Controller{
             $invoice = Invoice::create([
                 'invoice_no'=>$inv_no,
                 'invoice_date'=>date('Y-m-d H:i:s'),
-                'invoice_gross_amt'=>NULL,
-                'invoice_net_amt'=>NULL,
+                'invoice_gross_amt'=>$request->tot_amount,
+                'invoice_net_amt'=>$request->net_amount,
                 'doctor_id'=>$request->doctor_id,
                 'added_by'=>$added_by,
                 'price_option'=>$request->inv_type,
-                'payment_type'=>$request->payment_type
+                'payment_type'=>1,
+                'invoice_discount_per'=>$request->discount,
+                'invoice_discount'=>$request->discount_amt,
+                'doc_consult_fee'=>$request->consultation_amt
             ]);
             $lastInvoice = Invoice::select('invoice_id', 'invoice_no')->where('added_by',$added_by)->latest()->first();
             $totalInvAmt = 0;
@@ -155,9 +171,24 @@ class InvoiceController extends Controller{
                 }
             }
 
+            /**
+             * OTHER FEES
+             */
+            $otherPyments = 0;
+            for ($j = 1; $j <= $request->other_item_count; $j++) {
+                if(isset($request['other_type_'.$j])){
+                    $otherPyments += $request['other_amt_'.$j];
+                    $invoiceOtherFee = InvoiceOtherFee::create([
+                        'invoice_id'=>$lastInvoice->invoice_id,
+                        'fee_id'=>$request['other_type_'.$j],
+                        'other_price'=>$request['other_amt_'.$j]
+                    ]);
+                }
+            }
+
             $upInvoice = Invoice::find($lastInvoice->invoice_id);
-            $upInvoice->invoice_gross_amt = $totalInvAmt;
-            $upInvoice->invoice_net_amt = $totalInvAmt;
+            // $upInvoice->invoice_gross_amt = $totalInvAmt;
+            $upInvoice->invoice_other_amt = $otherPyments;
             $upInvoice->save();
 
             DB::commit();
@@ -258,7 +289,7 @@ class InvoiceController extends Controller{
 
     public function search(Request $request){
         $invQuery = DB::table('invoice as i')
-        ->join('invoice_product as ip','ip.invoice_id','i.invoice_id')
+        // ->join('invoice_product as ip','ip.invoice_id','i.invoice_id')
         ->join('doctors as d','i.doctor_id','d.doctor_id')
         ->select([
             'i.invoice_id',
@@ -271,9 +302,9 @@ class InvoiceController extends Controller{
             'd.doctor_name'
         ])
         ->whereNull('i.deleted_at')
-        ->whereNull('ip.deleted_at')
+        // ->whereNull('ip.deleted_at')
         ->groupBy('i.invoice_id')
-        ->orderBy('i.invoice_id');
+        ->orderBy('i.invoice_id', 'DESC');
         return DataTables::of($invQuery)
         ->addColumn('payment_type', function ($invQuery) {
             if($invQuery->payment_type == 1){
@@ -314,7 +345,8 @@ class InvoiceController extends Controller{
     public function show($id){
         $invoice = Invoice::find($id);
         $invoiceItem = InvoiceProduct::where('invoice_id',$id)->orderBy('line_no')->get();
-        return view('invoice.display',['invoice'=>$invoice,'invoiceItem'=>$invoiceItem]);
+        $invoiceOtherFee = InvoiceOtherFee::where('invoice_id',$id)->get();
+        return view('invoice.display',['invoice'=>$invoice,'invoiceItem'=>$invoiceItem,'invoiceOtherFee'=>$invoiceOtherFee]);
     }
 
     public function test_print(){

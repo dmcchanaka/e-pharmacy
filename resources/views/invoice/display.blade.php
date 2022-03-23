@@ -94,17 +94,73 @@
                                     <td colspan="5">GROSS AMOUNT</td>
                                     <td style="text-align: right;font-weight:bold">{{number_format($total_amt,2)}}</td>
                                 </tr>
+                                @if ($invoice->invoice_discount > 0)
+                                <tr>
+                                    <td colspan="5">DISCOUNT ({{$invoice->invoice_discount_per}}%)</td>
+                                    <td style="text-align: right;font-weight:bold">{{number_format($invoice->invoice_discount,2)}}</td>
+                                </tr>    
+                                @endif
+                                <tr>
+                                    <td colspan="5">CONSULTANT FEE</td>
+                                    <td style="text-align: right;font-weight:bold">{{number_format($invoice->doc_consult_fee,2)}}</td>
+                                </tr>
+                                @if ($invoice->invoice_other_amt > 0)
+                                <tr>
+                                    <td colspan="5">OTHER CHARGES</td>
+                                    <td style="text-align: right;font-weight:bold">{{number_format($invoice->invoice_other_amt,2)}}</td>
+                                </tr>    
+                                @endif
                                 <tr>
                                     <td colspan="5">NET AMOUNT</td>
-                                    <td style="text-align: right;font-weight:bold">{{number_format($total_amt - $invoice->sr_amt,2)}}</td>
+                                    <td style="text-align: right;font-weight:bold">{{number_format(($invoice->invoice_net_amt),2)}}</td>
                                 </tr>
                             </tfoot>
                         </table>
                         @else
-                            <div style="text-align:center;color:red"><label class="col-form-label">No Record Found</label></div>
+                            {{-- <div style="text-align:center;color:red"><label class="col-form-label">No Record Found</label></div> --}}
                         @endif
                     </div>
-
+                    @if(isset($invoiceOtherFee) && sizeof($invoiceOtherFee) > 0)
+                    <h3 style="background-color: #b4b4b4;padding:5px;border-radius:3px">Other charges</h3><hr/>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTables-example" id="invoice_table" >
+                            <thead>
+                                <tr>
+                                    <th style="text-align: center;background-color: #1ab394;color:#fff">Line No.</th>
+                                    <th style="text-align: center;background-color: #1ab394;color:#fff">Fee type</th>
+                                    <th style="text-align: center;background-color: #1ab394;color:#fff">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php $count = 0;$total_other_amt=0; @endphp
+                                @foreach ($invoiceOtherFee as $item)
+                                @php $count++;$total_other_amt+=$item->other_price; @endphp
+                                <tr>
+                                    <td>{{$count}}</td>
+                                    <td>{{$item->getFeeType()}}</td>
+                                    <td style="text-align: right">{{number_format($item->other_price,2)}}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                            @if ($invoice->invoice_other_amt > 0 && sizeof($invoiceItem) == 0)
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2">GROSS AMOUNT</td>
+                                    <td style="text-align: right;font-weight:bold">{{number_format($total_other_amt,2)}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">CONSULTANT FEE</td>
+                                    <td style="text-align: right;font-weight:bold">{{number_format($invoice->doc_consult_fee,2)}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">NET AMOUNT</td>
+                                    <td style="text-align: right;font-weight:bold">{{number_format(($invoice->invoice_net_amt),2)}}</td>
+                                </tr>
+                            </tfoot>
+                            @endif
+                        </table>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>

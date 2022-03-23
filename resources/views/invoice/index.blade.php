@@ -50,7 +50,6 @@
                                     <td>:</td>
                                     <td class="text-left" colspan="4">
                                         <select id="doctor_id" name="doctor_id" class="form-control form-control-sm" onchange="select_doctor()">
-                                            <option value="">SELECT DOCTOR</option>
                                             @foreach ($doctors as $item)
                                             <option value="{{$item->doctor_id}}">{{$item->doctor_name}}</option>
                                             @endforeach
@@ -105,25 +104,8 @@
                                 </tr>
                             </tbody>
                             <tbody>
-                                {{-- <tr id="tr_1">
-                                    <td style="text-align: center">
-                                        <span class="fa fa-plus fa-lg" style="cursor: pointer" onclick="gen_item();"></span>
-                                    </td>
-                                    <td>
-                                        <input type="text" id="pro_name_1" name="pro_name_1" class="col-md-12 form-control form-control-sm" onclick="load_product('1')" autocomplete="off" />
-                                        <input type="hidden" id="pro_id_1" name="pro_id_1" value="" />
-                                    </td>
-                                    <td>
-                                        <input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="price_1" name="price_1" size="5" readonly />
-                                        <input type="hidden" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="prc_1" name="prc_1" size="5" />
-                                    </td>
-                                    <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="qty_1" name="qty_1" onkeyup="check_qty(event, '1');" size="5" autocomplete="off" /></td>
-                                    <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="line_amt_1" name="line_amt_1" size="5" readonly /></td>
-                                    <td style="text-align: center">
-                                        <span class="fa fa-minus-circle fa-lg" style="cursor: pointer;" onclick="remove_item('1');"></span>
-                                    </td>
-                                </tr> --}}
-                                <input type="hidden" id="item_count" name="item_count" value="0" />
+                                <input type="hidden" id="item_count" name="item_count" value="1" />
+                                <input type="hidden" id="delete_count" name="delete_count" value="1"/>
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -137,28 +119,83 @@
                                     </td>
                                     <td>&nbsp;</td>
                                 </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td style="padding-top: 20px;text-align: right;font-weight:bold">Dicount %</td>
+                                    <td colspan="1" style="text-align: right;padding-right: 5px">
+                                        <input type="text" style="text-align: right;padding-right: 5px;font-weight:bold" class="col-md-12 form-control form-control-sm" id="discount" name="discount" size="10" onkeyup="calc_amount()" />
+                                        <input type="hidden" style="text-align: right;padding-right: 5px;font-weight:bold" class="col-md-12 form-control form-control-sm" id="discount_amt" name="discount_amt" size="10" />
+                                    </td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td style="padding-top: 20px;text-align: right;font-weight:bold">Net Amount</td>
+                                    <td colspan="1" style="text-align: right;padding-right: 5px">
+                                        <input type="text" style="text-align: right;padding-right: 5px;font-weight:bold" class="col-md-12 form-control form-control-sm" id="net_amount" name="net_amount" size="10" readonly />
+                                    </td>
+                                    <td>&nbsp;</td>
+                                </tr>
                             </tfoot>
                         </table>
                     </div>
+                    <h3 style="background-color: #b4b4b4;padding:5px;border-radius:3px">Other charges</h3><hr/>
                     <div class="row">
                         <div class="col-md-2 col-sm-12 col-xs-12 form-group"></div>
                         <div class="col-md-8 col-sm-12 col-xs-12 form-group text-center">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-1">
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label for="inputEmail" class="col-sm-4 col-form-label">PAYMENT TYPE</label>
-                                        <div class="col-sm-8">
-                                            <select id="payment_type" name="payment_type" class="form-control form-control-sm" onchange="select_pay_type()">
-                                                {{-- <option value="0">SELECT PAYMENT TYPE</option> --}}
-                                                <option value="1">CASH</option>
-                                                <option value="2">DEBIT/CREDIT CARD</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                <div class="col-md-10">
+                                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align: center">&nbsp</th>
+                                                <th style="text-align: center">Fee Type</th>
+                                                <th style="text-align: center">Amount</th>
+                                                <th style="text-align: center">&nbsp</th>
+                                            </tr>
+                                        </thead>
+                                        <body>
+                                            <tr>
+                                                <td style="text-align: center;padding-top:15px">&nbsp;</td>
+                                                <td>
+                                                    <input type="text" name="doc_free" id="doc_fee" class="col-md-12 form-control form-control-sm" value="Consultation fee" readonly />
+                                                </td>
+                                                <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="consultation_amt" name="consultation_amt" size="5" value="300.00" readonly /></td>
+                                                <td style="text-align: center;padding-top:15px">&nbsp;</td>
+                                            </tr>
+                                        </body>
+                                        <tbody id="other_fees">
+                                            <tr id="tr_other_1">
+                                                <td style="text-align: center;padding-top:15px">
+                                                    <span class="fa fa-plus fa-lg" style="cursor: pointer" onclick="gen_other_item();"></span>
+                                                </td>
+                                                <td>
+                                                    <select id="other_type_1" name="other_type_1" class="form-control form-control-sm" onchange="select_pay_type('1')">
+                                                        <option value="0">SELECT</option>
+                                                        @foreach ($otherFees as $other)
+                                                        <option value="{{$other->fee_id}}">{{$other->fee_description}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                                <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="other_amt_1" name="other_amt_1" size="5" readonly /></td>
+                                                <td style="text-align: center;padding-top:15px">
+                                                    <span class="fa fa-minus-circle fa-lg" style="cursor: pointer;" onclick="remove_other_item('1');"></span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <input type="hidden" id="other_item_count" name="other_item_count" value="1" />
+                                        <input type="hidden" id="delete_other_item_count" name="delete_other_item_count" value="1" />
+                                    </table>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-1">
                                 </div>
                             </div>
                         </div>
@@ -184,10 +221,86 @@
 <script src="{{asset('template/js/jquery-ui.js')}}"></script>
 
 <script type="text/javascript">
+
+    function load_other_fees(num){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "{{ url('/invoice/other_fees') }}",
+            data: {
+            },
+            success: function (data) {
+                $('#other_type_'+ num).empty();
+                $('#other_type_'+ num).append('<option value="s">SELECT</option>');
+                for(var x = 0; x < data.length; x++){
+                    $('#other_type_'+ num).append('<option value='+data[x].fee_id+'>'+data[x].fee_description+'</option>');
+                }
+            }
+        });
+    }
+
+    function select_pay_type(num){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "{{ url('/invoice/other_fees_by_id') }}",
+            data: {
+                other_type: $('#other_type_'+ num).val()
+            },
+            success: function (data) {
+                if(typeof data.fee_amt != 'undefind'){
+                    $('#other_amt_'+ num).val(data.fee_amt);
+                } else {
+                    $('#other_amt_'+ num).val('');
+                }
+                calc_amount();
+            }
+        });
+    }
+
+    /* GENERATE OTHER NEW ROW*/
+    function gen_other_item(){
+        var item_count = parseInt($('#other_item_count').val());
+        var next_count = item_count + 1;
+        $('#other_item_count').val(next_count);
+        var delete_count = parseInt($('#delete_other_item_count').val());
+        var delete_next_count = delete_count + 1;
+        $('#delete_other_item_count').val(delete_next_count);
+
+        
+        $('#other_fees').append('<tr class="even pointer" id="tr_other_' + next_count + '">'
+            + '<td style="text-align: center;padding-top:15px">'
+                +'<span class="fa fa-plus fa-lg" style="cursor: pointer" onclick="gen_other_item();"></span>'
+            + '</td>'
+            + '<td>'
+                + '<select id="other_type_' + next_count + '" name="other_type_' + next_count + '" class="form-control form-control-sm" onchange="select_pay_type(' + next_count + ')">'
+                    + '<option value="0">SELECT</option>'
+                + '</select>'
+            + '</td>'
+            + '<td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="other_amt_' + next_count + '" name="other_amt_' + next_count + '" size="5" readonly /></td>'
+            + '<td style="text-align: center;padding-top:15px">'
+                + '<span class="fa fa-minus-circle fa-lg" style="cursor: pointer" onclick="remove_other_item(' + next_count + ');"></span>'
+            + '</td>'
+        + '</tr>');
+        load_other_fees(next_count);
+    }
+    /**/
     /* GENERATE NEW ROW */
     function gen_item(){
-        var num = parseFloat($('#item_count').val()) + 1;
+        var item_count = parseInt($('#item_count').val());
+        var num = item_count + 1;
         $('#item_count').val(num);
+        var delete_count = parseInt($('#delete_count').val());
+        var delete_next_count = delete_count + 1;
+        $('#delete_count').val(delete_next_count);
         $('#invoice_table').append('<tr class="even pointer" id="tr_' + num + '">'
             + '<td style="text-align: center">'
                 // +'<span class="fa fa-plus fa-lg" style="cursor: pointer" onclick="gen_item();"></span>'
@@ -403,10 +516,23 @@
 
     /*REMOVE GENERATED ROW*/
     function remove_item(num) {
-        if (parseFloat($('#item_count').val()) != 1) {
-            $('#tr_' + num).remove();
-            var num = parseFloat($('#item_count').val()) - 1;
-            $('#item_count').val(num);
+        var delete_count = parseInt($('#delete_count').val());
+        var delete_next_count = delete_count - 1;
+        $('#delete_count').val(delete_next_count);
+        $('#tr_'+num).empty();
+        if(delete_next_count == 0){
+            gen_item();
+        }
+        calc_amount();
+    }
+
+    function remove_other_item(num){
+        var delete_count = parseInt($('#delete_other_item_count').val());
+        var delete_next_count = delete_count - 1;
+        $('#delete_other_item_count').val(delete_next_count);
+        $('#tr_other_'+num).empty();
+        if(delete_next_count == 0){
+            gen_other_item();
         }
         calc_amount();
     }
@@ -425,7 +551,7 @@
             //alert("the browser don't support");
         }
         if (keyCode == 16) {// press Enter
-            gen_item();
+            // gen_item();
         }
         if ($('#inv_type').val() == "") {
             $('#qty_' + i).val(0);
@@ -513,21 +639,47 @@
             var line_amount = 0;
             var line_amount_qty = 0;
             /** CALC BOXES AMOUNT */
-            if (document.getElementById('pro_id_' + i) && $('#qty_' + i).val().match(/^(\d+)$/) && $('#qty_' + i).val() != "" && $('#pro_uom_' + i).val() == 'other') {
-                // line_amount_qty = 0;
-                line_amount_qty = parseFloat($('#qty_' + i).val()) * parseFloat($('#price_' + i).val());
+            if(typeof($('#qty_' + i).val()) != 'undefind'){
+                if (document.getElementById('pro_id_' + i) && $('#qty_' + i).val().match(/^(\d+)$/) && $('#qty_' + i).val() != "") {
+                    // line_amount_qty = 0;
+                    line_amount_qty = parseFloat($('#qty_' + i).val()) * parseFloat($('#price_' + i).val());
 
-                tot_amount += line_amount_qty;
-            } else if(document.getElementById('pro_id_' + i) && $('#qty_' + i).val().match(/^\d+(\.\d{0,2})?$/) && $('#qty_' + i).val() != "" && $('#pro_uom_' + i).val() == 'volume_or_kg') {
-                // line_amount_qty = 0;
-                line_amount_qty = parseFloat($('#qty_' + i).val()) * parseFloat($('#price_' + i).val());
-
-                tot_amount += line_amount_qty;
+                    tot_amount += line_amount_qty;
+                }
+                line_amount += line_amount_qty;
+                $('#line_amt_' + i).val(line_amount.formatMoney(2, '.', ','));
             }
-            line_amount += line_amount_qty;
-            $('#line_amt_' + i).val(line_amount.formatMoney(2, '.', ','));
         }
         $('#tot_amount').val(tot_amount.formatMoney(2, '.', ','));
+
+        var discountAmt = 0;
+        var discount = parseFloat(document.getElementById('discount').value).toFixed(2);
+
+        if (isNaN(discount)) {
+            discount = 0;
+            $('#discount').val(discount);
+        }
+
+        /*CALC NET AMOUNT*/
+        if(discount > 0){
+            discountAmt = (tot_amount / 100) * discount;
+            $('#discount_amt').val(discountAmt.formatMoney(2, '.', ','));
+        }
+        var netAmount = 0;
+        netAmount = tot_amount - discountAmt;
+
+        /*CONSULTATION FEE*/
+        var consultFee = parseFloat(document.getElementById('consultation_amt').value).toFixed(2);
+        var j = 1;
+        var tot_other_amount = 0;
+        for (j = 1; j <= parseFloat($('#other_item_count').val()); j++) {
+            if (document.getElementById('other_type_' + j) && $('#other_amt_' + j).val() != "") {
+                tot_other_amount += parseFloat($('#other_amt_' + j).val());
+            }
+        }
+        netAmount = parseFloat(netAmount) + parseFloat(consultFee) + parseFloat(tot_other_amount);
+
+        $('#net_amount').val(netAmount.formatMoney(2, '.', ','));
     }
 
     function invoice_validation() {

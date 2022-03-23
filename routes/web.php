@@ -57,6 +57,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('view_invoice', [App\Http\Controllers\InvoiceController::class, 'view_invoice']);
     Route::get('/invoice/search', [App\Http\Controllers\InvoiceController::class, 'search']);
     Route::get('/display_invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'show']);
+
+    Route::get('/invoice/other_fees', [App\Http\Controllers\InvoiceController::class, 'search_other_fee']);
+    Route::get('/invoice/other_fees_by_id', [App\Http\Controllers\InvoiceController::class, 'search_other_fee_by_id']);
     /**END INVOICE MODULE */
 
     /**REPORT MODULE */
