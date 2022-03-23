@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Reports\DailySalesSummaryReportController;
+use App\Http\Controllers\Reports\DoctorPaymentReportController;
 use App\Http\Controllers\Reports\ExpiryProductReportController;
 use App\Http\Controllers\Reports\ProductWiseStockReportController;
 use Illuminate\Support\Facades\Auth;
@@ -77,6 +78,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::group(['prefix' => 'daily-sales-summary'], function () {
             Route::get('load', [DailySalesSummaryReportController::class, 'index']);
             Route::post('search', [DailySalesSummaryReportController::class, 'search']);
+        });
+        /**DOCTOR PAYMENT REPORT */
+        Route::group(['prefix' => 'doctor-payments'], function () {
+            Route::get('load', [DoctorPaymentReportController::class, 'index']);
+            Route::post('search', [DoctorPaymentReportController::class, 'search']);
         });
     });
     /**END REPORT MODULE */
