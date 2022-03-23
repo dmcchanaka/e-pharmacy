@@ -35,7 +35,7 @@ class DailySalesSummaryReportController extends Controller{
             $query->where('rs.pro_id', '=', "{$request->get('pro_id')}");
         }
         if(isset($request->start_date) && $request->start_date != "" && isset($request->end_date) && $request->end_date != "") {
-            $query->whereBetween('i.invoice_date',[$request->start_date,$request->end_date]);
+            $query->whereBetween('i.invoice_date',[$request->start_date. ' 00:00:00',$request->end_date. ' 23:59:59']);
         }
         $daily_sales = $query->get();
         return view('reports.sales.daily.load',compact('daily_sales'));
