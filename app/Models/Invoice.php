@@ -24,7 +24,9 @@ class Invoice extends Model
         'invoice_net_amt',
         'doctor_id',
         'added_by',
-        'payment_type'
+        'payment_type',
+        'doc_consult_fee',
+        'invoice_other_amt'
     ];
 
     public static function getInvoiceNo(){
