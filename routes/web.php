@@ -3,6 +3,7 @@
 use App\Http\Controllers\Reports\DailySalesSummaryReportController;
 use App\Http\Controllers\Reports\DoctorPaymentReportController;
 use App\Http\Controllers\Reports\ExpiryProductReportController;
+use App\Http\Controllers\Reports\FastMovingItemsReportController;
 use App\Http\Controllers\Reports\ProductWiseStockReportController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -83,6 +84,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::group(['prefix' => 'doctor-payments'], function () {
             Route::get('load', [DoctorPaymentReportController::class, 'index']);
             Route::post('search', [DoctorPaymentReportController::class, 'search']);
+        });
+        /**FAST MOVING ITEMS REPORT */
+        Route::group(['prefix' => 'fast-moving-items'], function () {
+            Route::get('load', [FastMovingItemsReportController::class, 'index']);
+            Route::post('search', [FastMovingItemsReportController::class, 'search']);
         });
     });
     /**END REPORT MODULE */

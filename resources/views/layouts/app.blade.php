@@ -67,6 +67,7 @@
                         <li><a href="{{ url('reports/expiry-product/load') }}">EXPIRY PRODUCTS</a></li>
                         <li><a href="{{ url('reports/daily-sales-summary/load') }}">DAILY SALES SUMMARY</a></li>
                         <li><a href="{{ url('reports/doctor-payments/load') }}">DOCTOR PAYMENTS</a></li>
+                        <li><a href="{{ url('reports/fast-moving-items/load') }}">FAST MOVING ITEMS</a></li>
                     </ul>
                 </li>
             </ul>

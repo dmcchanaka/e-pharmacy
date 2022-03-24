@@ -6,11 +6,11 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class DailySalesSummaryReportController extends Controller{
+class FastMovingItemsReportController extends Controller{
 
     public function index(){
         $products = Product::get();
-        return view('reports.sales.daily.index',compact('products'));
+        return view('reports.fast-moving-items.index',compact('products'));
     }
 
     public function search(Request $request){
@@ -29,7 +29,8 @@ class DailySalesSummaryReportController extends Controller{
             DB::raw("SUM(ip.ip_qty * ip.ip_price) AS retailer_amt"),
         ])
         ->groupBy('p.pro_id','ip.ip_price')
-        ->orderBy('p.pro_name');
+        ->orderByRaw('SUM(ip.ip_qty) DESC');
+        // ->orderBy('p.pro_name');
 
         if ($request->has('pro_id') && $request->get('pro_id') != "0") {
             $query->where('ip.pro_id', '=', "{$request->get('pro_id')}");
@@ -38,6 +39,6 @@ class DailySalesSummaryReportController extends Controller{
             $query->whereBetween('i.invoice_date',[$request->start_date. ' 00:00:00',$request->end_date. ' 23:59:59']);
         }
         $daily_sales = $query->get();
-        return view('reports.sales.daily.load',compact('daily_sales'));
+        return view('reports.fast-moving-items.load',compact('daily_sales'));
     }
 }
