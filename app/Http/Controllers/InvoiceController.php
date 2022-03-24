@@ -176,7 +176,7 @@ class InvoiceController extends Controller{
              */
             $otherPyments = 0;
             for ($j = 1; $j <= $request->other_item_count; $j++) {
-                if(isset($request['other_type_'.$j])){
+                if(isset($request['other_type_'.$j]) && $request['other_type_'.$j] != 0){
                     $otherPyments += $request['other_amt_'.$j];
                     $invoiceOtherFee = InvoiceOtherFee::create([
                         'invoice_id'=>$lastInvoice->invoice_id,
@@ -193,8 +193,8 @@ class InvoiceController extends Controller{
 
             DB::commit();
 
-            return redirect()->route('print_invoice',['id' => $lastInvoice->invoice_id]);
-            // return redirect()->route('invoice')->with('success', 'RECORD HAS BEEN SUCCESSFULLY INSERTED!');
+            // return redirect()->route('print_invoice',['id' => $lastInvoice->invoice_id]);
+            return redirect()->route('invoice')->with('success', 'RECORD HAS BEEN SUCCESSFULLY INSERTED!');
 
         } catch (\Exception $e) {
             DB::rollback();
