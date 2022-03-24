@@ -193,8 +193,8 @@ class InvoiceController extends Controller{
 
             DB::commit();
 
-            // return redirect()->route('print_invoice',['id' => $lastInvoice->invoice_id]);
-            return redirect()->route('invoice')->with('success', 'RECORD HAS BEEN SUCCESSFULLY INSERTED!');
+            return redirect()->route('print_invoice',['id' => $lastInvoice->invoice_id]);
+            // return redirect()->route('invoice')->with('success', 'RECORD HAS BEEN SUCCESSFULLY INSERTED!');
 
         } catch (\Exception $e) {
             DB::rollback();
@@ -213,21 +213,23 @@ class InvoiceController extends Controller{
             ->orderBy('p.pro_name')
             ->get();
 
+        $invoiceOtherFee = InvoiceOtherFee::where('invoice_id',$id)->get();
+
             try {
                 // Enter the share name for your USB printer here
                 // $connector = null;
                 $connector = new WindowsPrintConnector("EPSON TM-T81III Receipt"); //shared printer name
             
                 $printer = new Printer($connector);
-                $printer->setFont(Printer::FONT_B); // Dot Matrix - Default
+                $printer->setFont(Printer::FONT_A); // Dot Matrix - Default
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
                 $printer->setTextSize(2, 1); //text size
                 $printer->text("CITIZENS HOSPITAL (PVT) LTD\n");
                 $printer->setTextSize(1, 1);
-                $printer->text("No.338/1, Nugagoda junction, Bandaragama road, Waskaduwa.\n");
+                $printer->text("No.338/1, Nugagoda junction, Bandaragama road, \nWaskaduwa.\n");
                 $printer->text("TP - 034 22 30 840 | 070 35 14 555 \n");
 
-                $printer->text("--------------------------------------------------------------\n");
+                $printer->text("---------------------------------------------------\n");
                 $printer->setJustification(Printer::JUSTIFY_LEFT);
                 $printDate = sprintf('%s %-13.40s',"Date & Time :",Date('Y-m-d H:i:s'));
                 $printer->text($printDate. "\n");
@@ -242,26 +244,51 @@ class InvoiceController extends Controller{
                 $invNo = sprintf('%s %-13.40s',"Payment Type :",$paymentType);
                 $printer->text($invNo. "\n");
 
-                $printer->text("--------------------------------------------------------------\n");
+                $printer->text("---------------------------------------------------\n");
                 $printer->setJustification(Printer::JUSTIFY_LEFT);
                 $printer->setEmphasis(true);
-                $printer->text("Code              Description          Qty          Amount\n");
+                $printer->text("Description          Qty              Amount\n");
                 $printer->setEmphasis(false);
                 $gross = 0;
                 foreach ($invoice_product as $key=>$item) {
                    $gross+= $item->ip_line_amt;
 
-                    $line = sprintf('%s. %-13.40s %-3.40s',($key+1),$item->pro_code,$item->pro_name,$item->ip_qty);
-                    $lineNew = sprintf('%40s %18s',$item->ip_qty,$item->ip_line_amt);
+                    $line = sprintf('%s. %-17.40s %-5.40s %17s',($key+1),$item->pro_name,$item->ip_qty,$item->ip_line_amt);
+                    // $lineNew = sprintf('%40s %18s',$item->ip_qty,$item->ip_line_amt);
                     $printer -> text("$line\n");
-                    $printer -> text("$lineNew\n");
+                    // $printer -> text("$lineNew\n");
                 }
-                $printer->text("--------------------------------------------------------------");
+                $printer->text("------------------------------------------------");
 
-                $grandLine = sprintf('%40s %20.2f',"Net Total",$gross);
+                $grandLine = sprintf('%30s %17.2f',"Gross Total",$gross);
                 $printer->text($grandLine);
+                $discountedAmt = $invoice->invoice_discount;
+                if($discountedAmt >= '0.00'){
+                    $discountLine = sprintf('%30s %17.2f',"Discount",$discountedAmt);
+                    $printer->text($discountLine);
+                }
+                $consultantFee = $invoice->doc_consult_fee;
+                $consultantFeeLine = sprintf('%30s %17.2f',"Consult Fee",$consultantFee);
+                $printer->text($consultantFeeLine);
+
+                /**
+                 * OTHER CHARGES
+                 */
+                if(isset($invoiceOtherFee) && sizeof($invoiceOtherFee) > 0){
+                    foreach ($invoiceOtherFee as $key=>$itemFee) {
+                        $otherFeeLine = sprintf('%30s %17.2f',$itemFee->getFeeType(),$itemFee->other_price);
+                        $printer -> text("$otherFeeLine\n");
+                    }
+                }
+
+                $netAmount = $invoice->invoice_net_amt;
+                $netAmountLine = sprintf('%30s %17.2f',"Net Total",$netAmount);
+                $printer->setTextSize(2, 1);
+                $printer->text($netAmountLine);
+
+
                 $printer -> text("\n");
-                $printer->text("--------------------------------------------------------------");
+                $printer->text("------------------------------------------------");
                 $printer -> text("\n");
 
                 $printer->selectPrintMode();
