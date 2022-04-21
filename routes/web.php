@@ -64,6 +64,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/invoice/other_fees_by_id', [App\Http\Controllers\InvoiceController::class, 'search_other_fee_by_id']);
     /**END INVOICE MODULE */
 
+    /**EXPENSES MODULE */
+    Route::get('/expenses', [App\Http\Controllers\ExpensesController::class, 'index'])->name('expenses');
+    Route::post('/add_expenses', [App\Http\Controllers\ExpensesController::class, 'store'])->name('add_expenses');
+    Route::get('view_expenses', [App\Http\Controllers\ExpensesController::class, 'view_expenses']);
+    Route::get('/expenses/search', [App\Http\Controllers\ExpensesController::class, 'search']);
+    /**END EXPENSES MODULE */
+
     /**REPORT MODULE */
     Route::group(['prefix' => 'reports'], function () {
         Route::group(['prefix' => 'stock'], function () {
