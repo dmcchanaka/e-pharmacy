@@ -13,7 +13,7 @@
 @section('content')
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
-        <h2>View Invoices</h2>
+        <h2>View Expenses</h2>
     </div>
     <div class="col-lg-2">
 
@@ -25,29 +25,6 @@
         <div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-content">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">INVOICE NO.</label>
-                            <div class="col-sm-9">
-                                <input type="text" id="invoice_no" name="invoice_no" class="form-control form-control-sm" />
-                            </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">DOCTOR</label>
-                                <div class="col-sm-9">
-                                    <select class="form-control form-control-sm" id="doctor_id" name="doctor_id">
-                                        <option value="0">SELECT DOCTOR</option>
-                                        @foreach ($doctors as $item)
-                                        <option value="{{$item->doctor_id}}">{{$item->doctor_name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
@@ -104,14 +81,10 @@
                         <table class="table table-striped table-bordered table-hover dataTables-example" id="invoice_table" >
                             <thead>
                                 <tr>
-                                    <th style="background-color: #1ab394;color:#fff">Invoice No</th>
-                                    <th style="background-color: #1ab394;color:#fff">Invoice Date</th>
-                                    <th style="background-color: #1ab394;color:#fff">Invoice Time</th>
-                                    <th style="background-color: #1ab394;color:#fff">Pay Type</th>
-                                    <th style="background-color: #1ab394;color:#fff">Doctor</th>
-                                    <th style="background-color: #1ab394;color:#fff">Gross Amount</th>
+                                    <th style="background-color: #1ab394;color:#fff">Description</th>
+                                    <th style="background-color: #1ab394;color:#fff">Expenses Date</th>
+                                    <th style="background-color: #1ab394;color:#fff">Expenses Time</th>
                                     <th style="background-color: #1ab394;color:#fff">Net Amount</th>
-                                    <th style="background-color: #1ab394;color:#fff">View</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -140,23 +113,17 @@ $('#invoice_table').DataTable({
     destroy: true,
     responsive: true,
     ajax: {
-        url: "{{ url('/invoice/search') }}",
+        url: "{{ url('/expenses/search') }}",
         data: function (d) {
-            d.invoice_no = $('#invoice_no').val();
-            d.doctor_id = $('#doctor_id').val();
             d.from_date = $('#from_date').val();
             d.to_date = $('#to_date').val();
         }
     },
     columns: [
-        { data: 'invoice_no', name: 'invoice_no' },
-        { data: 'invoice_date', name: 'invoice_date', className: 'text-center' },
-        { data: 'invoice_time', name: 'invoice_time', className: 'text-center' },
-        { data: 'payment_type', name: 'payment_type' },
-        { data: 'doctor_name', name: 'doctor_name' },
-        { data: 'invoice_gross_amt', name: 'invoice_gross_amt', className: 'text-right' },
-        { data: 'invoice_net_amt', name: 'invoice_net_amt', className: 'text-right' },
-        { data: 'display', name: 'display', className: 'text-center' }
+        { data: 'exp_description', name: 'exp_description' },
+        { data: 'exp_date', name: 'exp_date', className: 'text-center' },
+        { data: 'exp_time', name: 'exp_time', className: 'text-center' },
+        { data: 'exp_amt', name: 'exp_amt', className: 'text-right' }
     ],
     order: [
         0, 'desc'

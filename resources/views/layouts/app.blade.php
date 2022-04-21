@@ -46,7 +46,7 @@
                 </li>
                 {{-- @if (config('pos.admin_user_type') == Auth::user()->u_tp_id) --}}
                 <li>
-                    <a href="#"><i class="fa fa-book"></i> <span class="nav-label">GRN </span></a>
+                    <a href="#"><i class="fa fa-file"></i> <span class="nav-label">GRN </span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{ url('grn') }}">ADD</a></li>
                         <li><a href="{{ url('view_grn') }}">VIEW</a></li>
@@ -58,6 +58,13 @@
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{ url('invoice') }}">ADD</a></li>
                         <li><a href="{{ url('view_invoice') }}">VIEW</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-money"></i> <span class="nav-label">EXPENSES </span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="{{ url('expenses') }}">ADD</a></li>
+                        <li><a href="{{ url('view_expenses') }}">VIEW</a></li>
                     </ul>
                 </li>
                 <li>
