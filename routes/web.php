@@ -71,6 +71,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/expenses/search', [App\Http\Controllers\ExpensesController::class, 'search']);
     /**END EXPENSES MODULE */
 
+    /**PRIVILEGE MODULE */
+    Route::get('/privilege', [App\Http\Controllers\PrivilegeController::class, 'index'])->name('privilege');
+    Route::post('/add_privilege', [App\Http\Controllers\PrivilegeController::class, 'save'])->name('add_privilege');
+    Route::get('view_privilege', [App\Http\Controllers\PrivilegeController::class, 'show'])->name('view_privilege');
+    Route::post('privilege/search', [App\Http\Controllers\PrivilegeController::class, 'search']);
+    Route::get('/display_privilege/{id}', [App\Http\Controllers\PrivilegeController::class, 'display']);
+    Route::get('/edit_privilege/{id}', [App\Http\Controllers\PrivilegeController::class, 'edit']);
+    Route::post('/update_privilege', [App\Http\Controllers\PrivilegeController::class, 'update']);
+    /**END PRIVILEGE MODULE */
+
     /**REPORT MODULE */
     Route::group(['prefix' => 'reports'], function () {
         Route::group(['prefix' => 'stock'], function () {

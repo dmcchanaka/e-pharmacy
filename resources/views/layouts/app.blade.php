@@ -1,3 +1,14 @@
+@php 
+use App\Models\User;
+
+if(Auth::user()->u_tp_id == config('pos.super_admin_user_type')[0]) {
+    $previladge = User::userPrivilage(Auth::user()->per_gp_id,Auth::user()->u_tp_id);
+} else if(Auth::user()->per_gp_id != ""){
+    $previladge = User::userPrivilage(Auth::user()->per_gp_id,Auth::user()->u_tp_id);
+} else {
+    $previladge = [];
+}
+@endphp
 <!DOCTYPE html>
 <html>
 
@@ -41,33 +52,45 @@
                         EPMCY
                     </div>
                 </li>
+                @if(isset($previladge))
+                @foreach ($previladge as $main_sec)
                 <li>
+                    <a href="{{ url('product') }}"><i class="fa fa-coffee"></i> <span class="nav-label">{{$main_sec['main_sec_nav_name']}}</span> </a>
+                    <ul class="nav nav-second-level collapse">
+                        @foreach($main_sec['sub_section'] AS $sub_sec)
+                        @if ($sub_sec['third_lvl_nav_status'] == '0')
+                        <li><a href="{{url('/'.$sub_sec['sub_sec_nav_url'])}}">{{$sub_sec['sub_sec_nav_name']}}</a></li>
+                        @endif
+                        @endforeach
+                    </ul>
+                </li>
+                @endforeach
+                @endif
+                {{-- <li>
                     <a href="{{ url('product') }}"><i class="fa fa-coffee"></i> <span class="nav-label">PRODUCT</span>  </a>
                 </li>
-                {{-- @if (config('pos.admin_user_type') == Auth::user()->u_tp_id) --}}
                 <li>
                     <a href="#"><i class="fa fa-file"></i> <span class="nav-label">GRN </span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{ url('grn') }}">ADD</a></li>
                         <li><a href="{{ url('view_grn') }}">VIEW</a></li>
                     </ul>
-                </li>
-                {{-- @endif --}}
-                <li>
+                </li> --}}
+                {{-- <li>
                     <a href="#"><i class="fa fa-shopping-cart"></i> <span class="nav-label">INVOICE </span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{ url('invoice') }}">ADD</a></li>
                         <li><a href="{{ url('view_invoice') }}">VIEW</a></li>
                     </ul>
-                </li>
-                <li>
+                </li> --}}
+                {{-- <li>
                     <a href="#"><i class="fa fa-money"></i> <span class="nav-label">EXPENSES </span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{ url('expenses') }}">ADD</a></li>
                         <li><a href="{{ url('view_expenses') }}">VIEW</a></li>
                     </ul>
-                </li>
-                <li>
+                </li> --}}
+                {{-- <li>
                     <a href="#"><i class="fa fa-book"></i> <span class="nav-label">REPORTS </span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{ url('reports/stock/load') }}">STOCK</a></li>
@@ -76,7 +99,14 @@
                         <li><a href="{{ url('reports/doctor-payments/load') }}">DOCTOR PAYMENTS</a></li>
                         <li><a href="{{ url('reports/fast-moving-items/load') }}">FAST MOVING ITEMS</a></li>
                     </ul>
-                </li>
+                </li> --}}
+                {{-- <li>
+                    <a href="#"><i class="fa fa-gear"></i> <span class="nav-label">USER PRIVILEGE</span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="{{ url('privilege') }}">ADD</a></li>
+                        <li><a href="{{ url('view_privilege') }}">VIEW</a></li>
+                    </ul>
+                </li> --}}
             </ul>
 
         </div>
