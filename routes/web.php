@@ -5,6 +5,7 @@ use App\Http\Controllers\Reports\DoctorPaymentReportController;
 use App\Http\Controllers\Reports\ExpiryProductReportController;
 use App\Http\Controllers\Reports\FastMovingItemsReportController;
 use App\Http\Controllers\Reports\ProductWiseStockReportController;
+use App\Http\Controllers\SendDailySummaryEmailController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
