@@ -1,0 +1,374 @@
+/* -----------------------
+2.9  Accordions
+-------------------------*/
+
+.accrodion-regular {}
+
+.accrodion-regular .card {
+    margin-bottom: 5px;
+}
+
+.accrodion-regular .card-body {
+    margin-top: -1px;
+}
+
+.accrodion-regular .card .card-header {
+    font-size: 16px;
+    padding: 10px;
+    background-color: transparent;
+}
+
+.accrodion-regular .card .card-header:first-child {
+    border-radius: calc(4px - 1px) calc(4px - 1px) 0 0;
+}
+
+.accrodion-regular .card .card-header .btn-link {
+    color: #3d405c;
+    text-decoration: none;
+}
+
+.accrodion-regular .card .card-header .btn-link:hover {
+    color: #f12357;
+    text-decoration: none;
+}
+
+.accrodion-outline {}
+
+.accrodion-outline .card {
+    margin-bottom: 5px;
+    background-color: transparent;
+    border-color: #d9d9e3;
+    box-shadow: none;
+}
+
+.accrodion-outline .card-body {
+    border: 1px solid #d9d9e3;
+    margin-top: -1px;
+}
+
+.accrodion-outline .card .card-header {
+    font-size: 16px;
+    padding: 10px;
+    border: 1px solid #d9d9e3;
+    background-color: transparent;
+}
+
+.accrodion-outline .card .card-header:first-child {
+    border-radius: calc(4px - 1px) calc(4px - 1px) 0 0;
+}
+
+.accrodion-outline .card .card-header .btn-link {
+    color: #3d405c;
+    text-decoration: none;
+}
+
+.accrodion-outline .card .card-header .btn-link:hover {
+    color: #f12357;
+    text-decoration: none;
+}
+
+/* -----------------------
+2.3  Cards
+-------------------------*/
+
+.card {
+    margin-bottom: 30px;
+    border: none;
+    -webkit-box-shadow: 0px 1px 2px 1px rgba(154, 154, 204, 0.22);
+    -moz-box-shadow: 0px 1px 2px 1px rgba(154, 154, 204, 0.22);
+    box-shadow: 0px 1px 2px 1px rgba(154, 154, 204, 0.22);
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid #e6e6f2;
+}
+
+.card-title {}
+
+.card-subtitle {
+    font-size: 14px;
+}
+
+.card-body {}
+
+.card-text {}
+
+.card-footer {
+    border-top: 1px solid #e6e6f2;
+    background: #f6f6ff;
+}
+
+.card-link {}
+
+.toolbar {
+    font-size: 18px;
+}
+
+.card-header-title {
+    margin: 0;
+    line-height: 2;
+}
+
+.card-toolbar-tabs {}
+
+.card-toolbar-tabs .nav.nav-pills {}
+
+.card-toolbar-tabs .nav.nav-pills .nav-item {}
+
+.card-toolbar-tabs .nav.nav-pills .nav-item .nav-link {
+    font-size: 14px;
+    padding: 6px 10px;
+}
+
+.card-toolbar-tabs .nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    color: #1ab394;
+    background-color: transparent;
+}
+
+
+/*------------------------- Card Varience --------------------------*/
+
+.card-figure {
+    position: relative;
+    padding: 10px;
+    border-radius: 2px;
+}
+
+.card-figure .figure {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    margin-bottom: 0;
+}
+
+.card-figure .figure-caption {
+    display: block;
+    margin-top: 10px;
+    font-size: .875rem;
+    color: inherit;
+}
+
+.figure-title {
+    margin: 0 0 .125rem;
+    text-transform: capitalize;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.card-figure.has-hoverable {
+    -webkit-transition: -webkit-transform .2s, -webkit-box-shadow .2s;
+    transition: -webkit-transform .2s, -webkit-box-shadow .2s;
+    transition: transform .2s, box-shadow .2s;
+    transition: transform .2s, box-shadow .2s, -webkit-transform .2s, -webkit-box-shadow .2s;
+}
+
+.card-figure.has-hoverable:focus,
+.card-figure.has-hoverable:hover {
+    -webkit-transform: translate3d(0, -.25rem, 0);
+    transform: translate3d(0, -.25rem, 0);
+    -webkit-box-shadow: 0 5px 15px 0 rgba(61, 70, 79, .15);
+    box-shadow: 0 5px 15px 0 rgba(61, 70, 79, .15);
+}
+
+.dd-handle {
+    margin-bottom: -1px;
+    padding: .75rem 1rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    background-color: #fff;
+    border-top: 1px solid rgba(19, 29, 40, .125);
+    border-bottom: 1px solid rgba(19, 29, 40, .125);
+}
+
+.dd-handle:hover {
+    color: #1ab394;
+    background: #fff;
+}
+
+.dd-dragel>.dd-item .dd-handle {
+    margin-top: 0;
+}
+
+.dd-dragel .dd-handle {
+    -webkit-box-shadow: 2px 4px 6px 0 rgba(0, 0, 0, .1);
+    box-shadow: 2px 4px 6px 0 rgba(0, 0, 0, .1);
+}
+
+#nestable2 .dd-handle {}
+
+#nestable2 .dd-handle:hover {}
+
+#nestable2 .dd-item>button:before {}
+
+.dd-hover>.dd-handle {
+    background: #1ab394 !important;
+}
+
+.btn {
+    font-size: 14px;
+    padding: 9px 16px;
+    border-radius: 2px;
+}
+
+.btn-link {
+    color: #1ab394;
+}
+
+.btn-link:hover {
+    text-decoration: none;
+}
+
+.btn-group,
+.btn-group-vertical {
+    position: relative;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    vertical-align: middle;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-group.row {
+    margin-bottom: 0;
+    padding: 8px 0;
+}
+
+.form-group.row label {
+    white-space: nowrap;
+}
+
+/*-----------------------
+2.16 Switch Toggle
+-------------------------*/
+
+.switch-button.switch-button-xs {
+    height: 20px;
+    line-height: 16px;
+    width: 50px;
+}
+
+.switch-button {
+    display: inline-block;
+    border-radius: 50px;
+    background-color: #9e9eaf;
+    width: 60px;
+    height: 27px;
+    padding: 4px;
+    position: relative;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+.switch-button input[type=checkbox] {
+    display: none;
+}
+
+.switch-button input[type=checkbox]:checked+span label {
+    float: right;
+    border-color: #1ab394;
+}
+
+.switch-button.switch-button-xs label {
+    height: 12px;
+    width: 12px;
+}
+
+.switch-button input[type=checkbox]:checked+span label:before {
+    position: absolute;
+    font-size: 12px;
+    font-weight: 600;
+    z-index: 0;
+    content: "ON";
+    color: #FFF;
+    left: 0;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.switch-button.switch-button-xs label:before {
+    line-height: 21px;
+}
+
+.switch-button label:before {
+    position: absolute;
+    font-size: 12px;
+    font-weight: 600;
+    z-index: 0;
+    content: "OFF";
+    right: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    line-height: 27px;
+    top: 0;
+    text-align: right;
+    padding-right: 10px;
+    color: #FFF;
+}
+
+.switch-button input[type=checkbox]:checked+span {
+    background-color: #1ab394;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 4px;
+}
+
+.switch-button.switch-button-sm label {
+    height: 16px;
+    width: 16px;
+}
+
+.switch-button label {
+    border-radius: 50%;
+    box-shadow: 0 0 1px 1px #FFF inset;
+    background-color: #FFF;
+    margin: 0;
+    height: 19px;
+    width: 19px;
+    z-index: 1;
+    display: inline-block;
+    cursor: pointer;
+    background-clip: padding-box;
+}
+
+.switch-button.switch-button-sm {
+    height: 24px;
+    width: 57px;
+    line-height: 20px;
+}
+
+.switch-button.switch-button-lg {
+    height: 30px;
+    line-height: 32px;
+    width: 64px;
+}
+
+.switch-button.switch-button-success input[type=checkbox]:checked+span {
+    background-color: #2ec551;
+}
+
+.switch-button.switch-button-warning input[type=checkbox]:checked+span {
+    background-color: #ffc750;
+}
+
+.switch-button.switch-button-danger input[type=checkbox]:checked+span {
+    background-color: #ef172c;
+}
