@@ -56,12 +56,12 @@
                                         @endif
                                     </td>
                                     <td style="text-align: center">
-                                        @if ($item->deactivated_at == NULL)
+                                    @if ($permission = \App\Models\User::checkUserPermission(Auth::user()->per_gp_id,Auth::user()->u_tp_id,"PRODUCT EDIT") == 1)
                                         <a href="#" onclick="edit_product({{$item->pro_id}})"><i class="fa fa-pencil fa-lg"></i></a>
                                         @endif
                                     </td>
                                     <td style="text-align: center">
-                                        @if ($item->deactivated_at == NULL)
+                                    @if ($permission = \App\Models\User::checkUserPermission(Auth::user()->per_gp_id,Auth::user()->u_tp_id,"PRODUCT DELETE") == 1)
                                         <a href="#" onclick="delete_product({{$item->pro_id}})" data-method="delete"><i style="color: red" class="fa fa-trash-o fa-lg"></i></a>
                                         @endif
                                     </td>
@@ -236,7 +236,7 @@
                                 $("#edit_pro_name").val(data.pro_name);
                                 $("#edit_buying_price").val(data.buying_price);
                                 $("#edit_retailer_price").val(data.retailer_price);
-                                $("#edit_expiry_date").val(data.retailer_price);
+                                $("#edit_expiry_date").val(data.expiry_date);
                             }
                         });
                     }

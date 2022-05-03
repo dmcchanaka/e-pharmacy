@@ -7,7 +7,7 @@
 @section('content')
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
-        <h2>Daily sales summary report</h2>
+        <h2>User Privilege View</h2>
     </div>
     <div class="col-lg-2">
 
@@ -22,7 +22,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">PRODUCT</label>
+                            <label class="col-sm-3 col-form-label">PERMISSION GROUP</label>
                                 <div class="col-sm-9">
                                     <input type="text" id="permission_group" name="permission_group" class="form-control form-control-sm" />
                                 </div>
