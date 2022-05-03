@@ -168,7 +168,7 @@
                                                 <td>
                                                     <input type="text" name="doc_free" id="doc_fee" class="col-md-12 form-control form-control-sm" value="Consultation fee" readonly />
                                                 </td>
-                                                <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="consultation_amt" name="consultation_amt" size="5" value="300.00" readonly /></td>
+                                                <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="consultation_amt" name="consultation_amt" size="5" value="300.00" /></td>
                                                 <td style="text-align: center;padding-top:15px">&nbsp;</td>
                                             </tr>
                                         </body>
@@ -185,7 +185,7 @@
                                                         @endforeach
                                                     </select>
                                                 </td>
-                                                <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="other_amt_1" name="other_amt_1" size="5" readonly /></td>
+                                                <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="other_amt_1" name="other_amt_1" size="5" /></td>
                                                 <td style="text-align: center;padding-top:15px">
                                                     <span class="fa fa-minus-circle fa-lg" style="cursor: pointer;" onclick="remove_other_item('1');"></span>
                                                 </td>
