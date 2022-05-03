@@ -26,10 +26,6 @@
                 </td>
                 <td style="text-align: center;cursor: pointer">
                     <span class="pull-right-container">
-                        @php 
-                        $permission = \App\Models\User::checkUserPermission(Auth::user()->per_gp_id,Auth::user()->u_tp_id,"PRIVILEGE EDIT");
-                        echo $permission;
-                        @endphp
                     @if ($permission = \App\Models\User::checkUserPermission(Auth::user()->per_gp_id,Auth::user()->u_tp_id,"PRIVILEGE EDIT") == 1)
                         <a href="{{url('edit_privilege/'.$item->per_gp_id)}}" target="_blank"><i class="fa fa-pencil fa-lg"></i></a>
                     @endif

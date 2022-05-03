@@ -1,7 +1,7 @@
 @php 
 use App\Models\User;
 
-if(Auth::user()->u_tp_id == config('pos.super_admin_user_type')[0]) {
+if(isset(config('pos.super_admin_user_type')[0]) && Auth::user()->u_tp_id == config('pos.super_admin_user_type')[0]) {
     $previladge = User::userPrivilage(Auth::user()->per_gp_id,Auth::user()->u_tp_id);
 } else if(Auth::user()->per_gp_id != ""){
     $previladge = User::userPrivilage(Auth::user()->per_gp_id,Auth::user()->u_tp_id);
