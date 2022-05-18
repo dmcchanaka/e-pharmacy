@@ -34,7 +34,7 @@
                                 <tr>
                                     <th>Product Code</th>
                                     <th>Description</th>
-                                    <th>Buying Price</th>
+                                    <th>Wholesale Price</th>
                                     <th>Retailer Price</th>
                                     <th>Status</th>
                                     <th>Edit</th>
@@ -108,7 +108,7 @@
                     </div>
                     <div class="form-group">
                         <label>Wholesale Price</label>
-                        <input type="text" placeholder="Enter Buying Price" id="buying_price" name="buying_price" class="form-control" required="" autocomplete="off" />
+                        <input type="text" placeholder="Enter wholesale Price" id="buying_price" name="buying_price" class="form-control" required="" autocomplete="off" />
                     </div>
                     <div class="form-group">
                         <label>Retailer Price</label>
@@ -162,7 +162,7 @@
                     </div>
                     <div class="form-group">
                         <label>Buying Price</label>
-                        <input type="text" placeholder="Enter Buying Price" id="edit_buying_price" name="edit_buying_price" class="form-control" required="" autocomplete="off" />
+                        <input type="text" placeholder="Enter wholesale Price" id="edit_buying_price" name="edit_buying_price" class="form-control" required="" autocomplete="off" />
                     </div>
                     <div class="form-group">
                         <label>Retailer Price</label>

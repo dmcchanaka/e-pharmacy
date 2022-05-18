@@ -56,9 +56,9 @@ class ProductController extends Controller
     public function destroy(Request $request){
         $invoice = InvoiceProduct::where('pro_id',$request->id)->get();
         if($invoice->isEmpty()){
-            $product = Product::find($request->id);
-            $product->deactivated_at = date('Y-m-d H:i:s');
-            $product->save();
+            $product = Product::find($request->id)->delete();
+            // $product->deactivated_at = date('Y-m-d H:i:s');
+            // $product->save();
             if($product){
                 return redirect('product')->with('success', 'RECORD HAS BEEN SUCCESSFULLY DELETED!');
             } else {
