@@ -32,6 +32,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     /**PRODUCT MODULE */
     Route::get('/product', [App\Http\Controllers\ProductController::class, 'index'])->name('product');
+    Route::get('/product/search', [App\Http\Controllers\ProductController::class, 'search']);
     Route::post('/add_product', [App\Http\Controllers\ProductController::class, 'store'])->name('add_product');
     Route::get('/product/edit', [App\Http\Controllers\ProductController::class, 'edit'])->name('edit_product');
     Route::post('/update_product', [App\Http\Controllers\ProductController::class, 'update'])->name('update_product');

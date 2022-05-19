@@ -221,7 +221,9 @@
 <script src="{{asset('template/js/jquery-ui.js')}}"></script>
 
 <script type="text/javascript">
-
+    $(document).ready(function(){
+        $('#product_name').focus();
+    });
     function load_other_fees(num){
         $.ajaxSetup({
             headers: {

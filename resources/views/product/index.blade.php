@@ -1,6 +1,17 @@
 @extends('layouts.app')
 @section('css')
 <link rel="stylesheet" href="{{asset('template/css/jquery-confirm.min.css')}}">
+<link href="{{ asset('template/css/plugins/dataTables/datatables.min.css')}}" rel="stylesheet">
+
+<link href="{{ asset('template/css/select2.min.css') }}" rel="stylesheet" />
+<style>
+    .dataTables_paginate {
+        margin-top: 15px;
+        position: absolute;
+        text-align: right;
+        left: 70%;
+    }
+</style>
 @endsection
 @section('content')
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -16,7 +27,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
-                <div class="ibox-title">
+                <!-- <div class="ibox-title">
                     <h5>Product Informations</h5>
                     <div class="ibox-tools animated">
                         <div class="col-lg-2" style="padding-bottom: 25px">
@@ -25,48 +36,60 @@
                             </button>
                         </div>
                     </div>
-
-                </div>
+                </div> -->
                 <div class="ibox-content">
-                    <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">PRODUCT</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control form-control-sm" id="pro_id" name="pro_id">
+                                        <option value="0">SELECT PRODUCT</option>
+                                        @foreach ($product as $item)
+                                        <option value="{{$item->pro_id}}">{{$item->pro_name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                            <label class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row text-right">
+                            <div class="col-sm-12">
+                                <button class="btn btn-primary btn-sm" type="button" onclick="search();">Search</button>
+                                <button class="btn btn-info" type="button" onclick="toggle_product_model();">
+                                    <i class="fa fa-plus"></i> Add New Product
+                                </button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive" id="instrument_table_div" style="display: none">
                         <table class="table table-striped table-bordered table-hover dataTables-example" id="instrument_table" >
                             <thead>
                                 <tr>
-                                    <th>Product Code</th>
-                                    <th>Description</th>
-                                    <th>Wholesale Price</th>
-                                    <th>Retailer Price</th>
-                                    <th>Status</th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>
+                                    <th style="background-color: #1ab394;color:#fff">Product Code</th>
+                                    <th style="background-color: #1ab394;color:#fff">Description</th>
+                                    <th style="background-color: #1ab394;color:#fff">Wholesale Price</th>
+                                    <th style="background-color: #1ab394;color:#fff">Retailer Price</th>
+                                    <th style="background-color: #1ab394;color:#fff">Status</th>
+                                    <th style="background-color: #1ab394;color:#fff">Edit</th>
+                                    <th style="background-color: #1ab394;color:#fff">Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($product as $item)
-                                    <tr>
-                                    <td>{{$item->pro_code}}</td>
-                                    <td>{{$item->pro_name}}</td>
-                                    <td style="text-align: right">{{$item->buying_price}}</td>
-                                    <td style="text-align: right">{{$item->retailer_price}}</td>
-                                    <td style="text-align: center">
-                                        @if ($item->deactivated_at == NULL)
-                                        <span style="color: green">ACTIVE</span>
-                                        @else
-                                        <span style="color: red">INACTIVE</span>
-                                        @endif
-                                    </td>
-                                    <td style="text-align: center">
-                                    @if ($permission = \App\Models\User::checkUserPermission(Auth::user()->per_gp_id,Auth::user()->u_tp_id,"PRODUCT EDIT") == 1)
-                                        <a href="#" onclick="edit_product({{$item->pro_id}})"><i class="fa fa-pencil fa-lg"></i></a>
-                                        @endif
-                                    </td>
-                                    <td style="text-align: center">
-                                    @if ($permission = \App\Models\User::checkUserPermission(Auth::user()->per_gp_id,Auth::user()->u_tp_id,"PRODUCT DELETE") == 1)
-                                        <a href="#" onclick="delete_product({{$item->pro_id}})" data-method="delete"><i style="color: red" class="fa fa-trash-o fa-lg"></i></a>
-                                        @endif
-                                    </td>
-                                    </tr>
-                                @endforeach
+                                
                             </tbody>
                         </table>
                     </div>
@@ -185,7 +208,45 @@
 @endsection
 @section('js')
 <script src="{{asset('template/js/jquery-confirm.min.js')}}"></script>
+<script src="{{ asset('template/js/plugins/dataTables/datatables.min.js')}}"></script>
+<script src="{{ asset('template/js/plugins/dataTables/dataTables.bootstrap4.min.js')}}"></script>
+
+<script src="{{asset('template/js/select2.min.js') }}"></script>
 <script type="text/javascript">
+    $(document).ready(function(){
+        $("#pro_id").select2({
+            maximumSelectionLength: 2
+        });
+    });
+
+    function search(){
+        $("#instrument_table_div").show();
+        $('#instrument_table').DataTable({
+            processing: true,
+            serverSide: true,
+            destroy: true,
+            responsive: true,
+            ajax: {
+                url: "{{ url('/product/search') }}",
+                data: function (d) {
+                    d.pro_id = $('#pro_id').val();
+                }
+            },
+            columns: [
+                { data: 'pro_code', name: 'pro_code' },
+                { data: 'pro_name', name: 'pro_name', className: 'text-center' },
+                { data: 'buying_price', name: 'buying_price', className: 'text-center' },
+                { data: 'retailer_price', name: 'retailer_price' },
+                { data: 'status', name: 'status', className: 'text-center' },
+                { data: 'edit', name: 'edit', className: 'text-center' },
+                { data: 'delete', name: 'delete', className: 'text-center' }
+            ],
+            order: [
+                0, 'desc'
+            ],
+        });
+    }
+
     function toggle_product_model() {
         $('#product-modal').modal();
         $("#pro_code").val("");
