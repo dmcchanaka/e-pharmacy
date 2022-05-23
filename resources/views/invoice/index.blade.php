@@ -222,8 +222,19 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
-        $('#product_name').focus();
+        generate_product();
+        document.getElementById("product_name").focus();
     });
+
+    /* SUBMIT USING SPACE KEY */
+    document.body.onkeyup = function(e){
+        if(e.keyCode == 32){
+            e.preventDefault();
+  	        e.stopImmediatePropagation();
+            form_submit('add', 'invoice_form');
+        }
+    }
+
     function load_other_fees(num){
         $.ajaxSetup({
             headers: {
@@ -276,7 +287,6 @@
         var delete_count = parseInt($('#delete_other_item_count').val());
         var delete_next_count = delete_count + 1;
         $('#delete_other_item_count').val(delete_next_count);
-
         
         $('#other_fees').append('<tr class="even pointer" id="tr_other_' + next_count + '">'
             + '<td style="text-align: center;padding-top:15px">'
@@ -367,12 +377,21 @@
                             $("#pro_name_" + i).css('border', '1px solid red');
                             $("#qty_" + i).css('border', '1px solid red');
                             $("#price_" + i).css('border', '1px solid red');
-                            $("#pro_name_" + i).focus();
+                            document.getElementById("product_name").focus();
                             $.alert({
                                 title: 'Alert',
                                 icon: 'fa fa-warning',
                                 type: 'green',
-                                content: 'This Product is already added'
+                                content: 'This Product is already added',
+                                buttons: {
+                                    ok: {
+                                        text: 'ok', // With spaces and symbols
+                                        keys: ['enter', 'a'],
+                                        action: function () {
+                                            document.getElementById("product_name").focus();
+                                        }
+                                    }
+                                }
                             });
                             remove_item(num);
                             break;
@@ -540,6 +559,9 @@
     }
 
     function check_qty(evt, i) {
+        console.log(evt);
+        evt.preventDefault();
+        evt.stopImmediatePropagation();
         var keyCode;
         if ("which" in evt) {// NN4 & FF &amp; Opera
             keyCode = evt.which;
@@ -552,45 +574,35 @@
         } else {
             //alert("the browser don't support");
         }
-        if (keyCode == 16) {// press Enter
-            // gen_item();
-        }
-        if ($('#inv_type').val() == "") {
-            $('#qty_' + i).val(0);
-            $('#inv_type').focus();
-            $.alert({
-                title: 'Alert',
-                icon: 'fa fa-warning',
-                type: 'green',
-                content: 'Please select invoice type'
-            });
-        }
-        if (!$('#qty_' + i).val().match(/^(\d+)$/) && $('#qty_' + i).val() != "" && ($('#pro_uom_' + i).val() == 'other')) {
+        // if (keyCode == 32 && $('#qty_' + i).val() > 0) {// press Space
+        //     document.getElementById("product_name").focus();
+        // }
+        if (!$('#qty_' + i).val().match(/^(\d+)$/) && $('#qty_' + i).val() != "") {
             var qty = parseFloat(document.getElementById('qty_' + i).value).toFixed(0);
 
             if (isNaN(qty)) {
                 qty = 0;
             }
             $('#qty_' + i).val(qty);
-            $.alert({
-                title: 'Alert',
-                icon: 'fa fa-warning',
-                type: 'green',
-                content: 'Enter valid Quantity'
-            });
-        } else if (!$('#qty_' + i).val().match(/^\d+(\.\d{0,2})?$/) && $('#qty_' + i).val() != "" && ($('#pro_uom_' + i).val() == 'volume_or_kg')) {
-            var qty = parseFloat(document.getElementById('qty_' + i).value).toFixed(2);
-
-            if (isNaN(qty)) {
-                qty = 0;
+            if(qty === 0){
+                $.alert({
+                    title: 'Alert',
+                    icon: 'fa fa-warning',
+                    type: 'green',
+                    content: 'Enter valid Quantity',
+                    buttons: {
+                        ok: {
+                            text: 'ok', // With spaces and symbols
+                            keys: ['enter'],
+                            action: function () {
+                            }
+                        }
+                    }
+                });
+            } else {
+                document.getElementById("product_name").focus();
+                form_submit('add', 'invoice_form');
             }
-            $('#qty_' + i).val(qty);
-            $.alert({
-                title: 'Alert',
-                icon: 'fa fa-warning',
-                type: 'green',
-                content: 'Enter valid Weight Or Volume'
-            });
         } else if(parseInt($('#qty_' + i).val()) > parseInt($('#stock_' + i).val()) && parseInt($('#stock_' + i).val())>0){
             var qty = parseFloat(document.getElementById('stock_' + i).value).toFixed(0);
 
@@ -618,6 +630,10 @@
                 content: 'Stock is not enough'
             });
             remove_item(i);
+        }
+        if (keyCode == 13 && $('#qty_' + i).val() > 0) {// press Enter
+            document.getElementById("product_name").focus();
+            generate_product();
         }
         calc_amount();
     }
@@ -686,14 +702,31 @@
 
     function invoice_validation() {
         valid = true;
-        if ($('#inv_type').val() == "") {
+        if ($('#doctor_id').val() == "") {
             valid = false;
-            $('#inv_type').focus();
+            $('#doctor_id').focus();
             $.alert({
                 title: 'Alert',
                 icon: 'fa fa-warning',
                 type: 'green',
-                content: 'Please select invoice type'
+                content: 'Please select doctor'
+            });
+        } else if(parseInt($('#item_count').val()) === 1){
+            valid = false;
+            $.alert({
+                title: 'Alert',
+                icon: 'fa fa-warning',
+                type: 'green',
+                content: 'Please enter atleast one item',
+                buttons: {
+                    ok: {
+                        text: 'ok', // With spaces and symbols
+                        keys: ['enter', 'a'],
+                        action: function () {
+                            document.getElementById("product_name").focus();
+                        }
+                    }
+                }
             });
         } else {
             var m = 1;
@@ -715,7 +748,15 @@
                         title: 'Alert',
                         icon: 'fa fa-warning',
                         type: 'green',
-                        content: 'Enter Valid Quantity'
+                        content: 'Enter Valid Quantity',
+                        buttons: {
+                            ok: {
+                                text: 'ok', // With spaces and symbols
+                                keys: ['enter'],
+                                action: function () {
+                                }
+                            }
+                        }
                     });
                     break;
                 }
@@ -735,6 +776,7 @@
                     Okey: {
                         text: 'confirm',
                         btnClass: 'btn-blue',
+                        keys: ['enter'],
                         action: function () {
                             document.getElementById(button_id).style.display = "none";
                             document.forms[form_id].submit();
@@ -743,6 +785,7 @@
                     cancel: {
                         text: 'cancel',
                         btnClass: 'btn-red',
+                        keys: ['esc'],
                         action: function () {
 
                         }

@@ -83,7 +83,7 @@
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label">FIND OR SCAN ITEM OR RECEIPT</label>
                                             <div class="col-lg-9">
-                                                <input type="text" onclick="generate_product()" id="product_name" name="product_name" placeholder="START TYPING ITEM NAME OR SCAN BARCODE..." class="form-control">
+                                                <input type="text" onfocus="generate_product()" id="product_name" name="product_name" placeholder="START TYPING ITEM NAME OR SCAN BARCODE..." class="form-control" autocomplete="off">
                                                 <input type="hidden" value="" id="product_id" name="product_id"  />
                                             </div>
                                         </div>
@@ -128,6 +128,19 @@
 <script src="{{asset('template/js/jquery-ui.js')}}"></script>
 
 <script type="text/javascript">
+    $(document).ready(function(){
+        generate_product();
+        document.getElementById("product_name").focus();
+    });
+
+    document.body.onkeyup = function(e){
+        if(e.keyCode == 32){
+            e.preventDefault();
+  	        e.stopImmediatePropagation();
+            form_submit('add', 'grn_form');
+        }
+    }
+    
     /* GENERATE NEW ROW */
     function gen_item(){
         var num = parseFloat($('#item_count').val()) + 1;
@@ -177,12 +190,22 @@
                         $("#pro_name_" + i).css('border', '1px solid red');
                         $("#qty_" + i).css('border', '1px solid red');
                         $("#price_" + i).css('border', '1px solid red');
-                        $("#pro_name_" + i).focus();
+                        // $("#pro_name_" + i).focus();
+                        document.getElementById("product_name").focus();
                         $.alert({
                             title: 'Alert',
                             icon: 'fa fa-warning',
                             type: 'green',
-                            content: 'This Product is already added'
+                            content: 'This Product is already added',
+                            buttons: {
+                                ok: {
+                                    text: 'ok', // With spaces and symbols
+                                    keys: ['enter', 'a'],
+                                    action: function () {
+                                        document.getElementById("product_name").focus();
+                                    }
+                                }
+                            }
                         });
                         remove_item(num);
                         break;
@@ -225,11 +248,21 @@
                         $("#qty_" + i).css('border', '1px solid red');
                         $("#price_" + i).css('border', '1px solid red');
                         $("#pro_name_" + i).focus();
+                        document.getElementById("product_name").focus();
                         $.alert({
                             title: 'Alert',
                             icon: 'fa fa-warning',
                             type: 'green',
-                            content: 'This Product is already added'
+                            content: 'This Product is already added',
+                            buttons: {
+                                ok: {
+                                    text: 'ok', // With spaces and symbols
+                                    keys: ['enter', 'a'],
+                                    action: function () {
+                                        document.getElementById("product_name").focus();
+                                    }
+                                }
+                            }
                         });
                         remove_item(num);
                         break;
@@ -290,6 +323,8 @@
     }
 
     function check_qty(evt, i) {
+        evt.preventDefault();
+        evt.stopImmediatePropagation();
         var keyCode;
         if ("which" in evt) {// NN4 & FF &amp; Opera
             keyCode = evt.which;
@@ -302,9 +337,7 @@
         } else {
             //alert("the browser don't support");
         }
-        if (keyCode == 16) {// press Enter
-            gen_item();
-        }
+        
         if (!$('#qty_' + i).val().match(/^(\d+)$/) && $('#qty_' + i).val() != "") {
             var qty = parseFloat(document.getElementById('qty_' + i).value).toFixed(0);
 
@@ -312,12 +345,30 @@
                 qty = 0;
             }
             $('#qty_' + i).val(qty);
-            $.alert({
-                title: 'Alert',
-                icon: 'fa fa-warning',
-                type: 'green',
-                content: 'Enter valid Quantity'
-            });
+            if(qty === 0){
+                $.alert({
+                    title: 'Alert',
+                    icon: 'fa fa-warning',
+                    type: 'green',
+                    content: 'Enter valid Quantity 1',
+                    buttons: {
+                        ok: {
+                            text: 'ok', // With spaces and symbols
+                            keys: ['enter'],
+                            action: function () {
+                                document.getElementById("product_name").focus();
+                            }
+                        }
+                    }
+                });
+            } else {
+                document.getElementById("product_name").focus();
+                form_submit('add', 'grn_form');
+            }
+        }
+        if (keyCode == 13 && $('#qty_' + i).val() > 0) {// press Enter
+            document.getElementById("product_name").focus();
+            generate_product();
         }
         calc_amount();
     }
@@ -356,27 +407,54 @@
     function grn_validation() {
         valid = true;
         var m = 1;
-        for (m = 1; m <= parseInt($('#item_count').val()); m++) {
-            if (document.getElementById('pro_name_' + m) && ($('#pro_id_' + m).val() == "")) {
-                valid = false;
-                $('#pro_name_' + m).focus();
-                $.alert({
-                    title: 'Alert',
-                    icon: 'fa fa-warning',
-                    type: 'green',
-                    content: 'Select Product'
-                });
-                break;
-            } else if (document.getElementById('pro_id_' + m) && ($('#qty_' + m).val() === '0' || $('#qty_' + m).val() === '')) {
-                valid = false;
-                $('#qty_' + m).focus();
-                $.alert({
-                    title: 'Alert',
-                    icon: 'fa fa-warning',
-                    type: 'green',
-                    content: 'Enter Valid Quantity'
-                });
-                break;
+        if(parseInt($('#item_count').val()) === 0){
+            valid = false;
+            $.alert({
+                title: 'Alert',
+                icon: 'fa fa-warning',
+                type: 'green',
+                content: 'Please enter atleast one item',
+                buttons: {
+                    ok: {
+                        text: 'ok', // With spaces and symbols
+                        keys: ['enter', 'a'],
+                        action: function () {
+                            document.getElementById("product_name").focus();
+                        }
+                    }
+                }
+            });
+        } else {
+            for (m = 1; m <= parseInt($('#item_count').val()); m++) {
+                if (document.getElementById('pro_name_' + m) && ($('#pro_id_' + m).val() == "")) {
+                    valid = false;
+                    $('#pro_name_' + m).focus();
+                    $.alert({
+                        title: 'Alert',
+                        icon: 'fa fa-warning',
+                        type: 'green',
+                        content: 'Select Product'
+                    });
+                    break;
+                } else if (document.getElementById('pro_id_' + m) && ($('#qty_' + m).val() === '0' || $('#qty_' + m).val() === '')) {
+                    valid = false;
+                    $('#qty_' + m).focus();
+                    $.alert({
+                        title: 'Alert',
+                        icon: 'fa fa-warning',
+                        type: 'green',
+                        content: 'Enter Valid Quantity',
+                        buttons: {
+                            ok: {
+                                text: 'ok', // With spaces and symbols
+                                keys: ['enter'],
+                                action: function () {
+                                }
+                            }
+                        }
+                    });
+                    break;
+                }
             }
         }
         return valid;
@@ -393,6 +471,7 @@
                     Okey: {
                         text: 'confirm',
                         btnClass: 'btn-blue',
+                        keys: ['enter'],
                         action: function () {
                             document.getElementById(button_id).style.display = "none";
                             document.forms[form_id].submit();
@@ -401,6 +480,7 @@
                     cancel: {
                         text: 'cancel',
                         btnClass: 'btn-red',
+                        keys: ['esc'],
                         action: function () {
 
                         }
