@@ -86,7 +86,7 @@
                     </div>
 
                 </div>
-                <div class="ibox-content">
+                <div class="ibox-content" id="grn_table_div" style="display: none">
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered table-hover dataTables-example" id="invoice_table" >
                             <thead>
@@ -117,7 +117,7 @@
 <script type="text/javascript">
 function search(){
 
-// $("#return_note_details").show();
+$("#grn_table_div").show();
 $('#invoice_table').DataTable({
     processing: true,
     serverSide: true,

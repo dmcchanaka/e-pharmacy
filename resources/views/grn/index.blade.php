@@ -140,6 +140,7 @@
             form_submit('add', 'grn_form');
         }
     }
+    
     /* GENERATE NEW ROW */
     function gen_item(){
         var num = parseFloat($('#item_count').val()) + 1;
@@ -344,21 +345,26 @@
                 qty = 0;
             }
             $('#qty_' + i).val(qty);
-            $.alert({
-                title: 'Alert',
-                icon: 'fa fa-warning',
-                type: 'green',
-                content: 'Enter valid Quantity 1',
-                buttons: {
-                    ok: {
-                        text: 'ok', // With spaces and symbols
-                        keys: ['enter'],
-                        action: function () {
-                            document.getElementById("product_name").focus();
+            if(qty === 0){
+                $.alert({
+                    title: 'Alert',
+                    icon: 'fa fa-warning',
+                    type: 'green',
+                    content: 'Enter valid Quantity 1',
+                    buttons: {
+                        ok: {
+                            text: 'ok', // With spaces and symbols
+                            keys: ['enter'],
+                            action: function () {
+                                document.getElementById("product_name").focus();
+                            }
                         }
                     }
-                }
-            });
+                });
+            } else {
+                document.getElementById("product_name").focus();
+                form_submit('add', 'grn_form');
+            }
         }
         if (keyCode == 13 && $('#qty_' + i).val() > 0) {// press Enter
             document.getElementById("product_name").focus();
@@ -437,7 +443,7 @@
                         title: 'Alert',
                         icon: 'fa fa-warning',
                         type: 'green',
-                        content: 'Enter Valid Quantity 2',
+                        content: 'Enter Valid Quantity',
                         buttons: {
                             ok: {
                                 text: 'ok', // With spaces and symbols
