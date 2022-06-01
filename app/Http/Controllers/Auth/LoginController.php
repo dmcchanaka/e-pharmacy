@@ -48,21 +48,23 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {   
-        $input = $request->all();
-  
-        $validator = Validator::make($request->all(),['username'=>'required|exists:users,username','password'=>'required']);
+        $validator = Validator::make($request->all(), [
+            'username' => 'required|exists:users,username',
+            'password' => 'required',
+        ]);
 
         if ($validator->fails()) {
-            return redirect('login')->withErrors($validator)->withInput();
+            return redirect('login')
+                ->withErrors($validator)
+                ->withInput();
         }
-  
-        $fieldType = $request->username;
-        if(Auth::attempt(['username'=>$request->username,'password'=>$request->password])){
+
+        $loginStatus = (Auth::attempt(['username'=>$request['username'],'password'=>$request['password']]));
+        if($loginStatus){
             $user = Auth::user();
             return redirect()->route('home');
         } else {
             return redirect()->route('login')->withErrors(['password'=>'The Entered Password is incorrect'])->withInput();
         }
-          
     }
 }
