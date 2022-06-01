@@ -162,7 +162,7 @@ class InvoiceController extends Controller{
                             /** */
                             $sold_qty -= $rp_remaining_qty;
                         }
-                        if((count($received_stk)==0 || $total_remain_qty < $request['pro_id_' . $i])){
+                        if((count($received_stk)==0 || $total_remain_qty < $request['qty_' . $i])){
                             DB::rollback();
                             $pro_name = Product::find($request['pro_id_' . $i]);
                             return redirect()->route('invoice')->with('error', 'Stock is not enough to invoice '.$pro_name->pro_name.' product');
