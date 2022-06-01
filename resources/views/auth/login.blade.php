@@ -8,15 +8,15 @@
             <form class="m-t" role="form" method="POST" action="{{ route('login') }}">
                 @csrf
                 <div class="form-group">
-                    <input type="text" id="username" name="username" class="form-control" placeholder="Username" required="">
-                    @error('email')
+                    <input type="text" id="username" name="username" class="form-control @error('username') is-invalid @enderror" value="{{ old('username') }}" placeholder="Username" required autofocus autocomplete="off">
+                    @error('username')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
                 </div>
                 <div class="form-group">
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required="">
+                    <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" required autocomplete="current-password">
                     @error('password')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
