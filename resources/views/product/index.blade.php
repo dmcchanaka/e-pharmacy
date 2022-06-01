@@ -68,9 +68,11 @@
                             <div class="form-group row text-right">
                             <div class="col-sm-12">
                                 <button class="btn btn-primary btn-sm" type="button" onclick="search();">Search</button>
+                                @if ($permission = \App\Models\User::checkUserPermission(Auth::user()->per_gp_id,Auth::user()->u_tp_id,"PRODUCT ADD") == 1)
                                 <button class="btn btn-info" type="button" onclick="toggle_product_model();">
                                     <i class="fa fa-plus"></i> Add New Product
                                 </button>
+                                @endif
                             </div>
                             </div>
                         </div>
@@ -281,6 +283,7 @@
                 Okey: {
                     text: 'Yes',
                     btnClass: 'btn-blue',
+                    keys: ['enter'],
                     action: function () {
                         $.ajax({
                             type: "GET",
@@ -305,6 +308,7 @@
                 cancel: {
                     text: 'No',
                     btnClass: 'btn-red',
+                    keys: ['esc'],
                     action: function () {
 
                     }
@@ -322,6 +326,7 @@
                 Okey: {
                     text: 'Yes',
                     btnClass: 'btn-blue',
+                    keys: ['enter'],
                     action: function () {
                         $.ajax({
                             type: "GET",
@@ -339,6 +344,7 @@
                 cancel: {
                     text: 'No',
                     btnClass: 'btn-red',
+                    keys: ['esc'],
                     action: function () {
 
                     }
