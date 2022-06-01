@@ -40,7 +40,7 @@ class ProductController extends Controller
         ->addColumn('edit', function ($proQuery) {
             if ($permission = \App\Models\User::checkUserPermission(Auth::user()->per_gp_id,Auth::user()->u_tp_id,"PRODUCT EDIT") == 1){
                 return '<div style="text-align:center">
-                    <a href="' . url('edit_product', $proQuery->pro_id) . '" target="_blank"><i class="fa fa-list-alt fa-lg"></i></a>
+                    <a href="#" onclick="edit_product('.$proQuery->pro_id.')"><i class="fa fa-pencil fa-lg"></i></a>
                 </div>';
             }
         })
