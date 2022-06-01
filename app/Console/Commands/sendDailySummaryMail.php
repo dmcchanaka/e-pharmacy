@@ -76,7 +76,9 @@ class sendDailySummaryMail extends Command
                 'pharmacySaleProductQty'=>$daily_sales->sum('sold_qty'),
                 'pharmacySale'=>$daily_sales->sum('retailer_amt'),
                 'pharmacyProfit'=>($daily_sales->sum('retailer_amt') - $daily_sales->sum('wholesale_amt')),
-                'expenses'=>$expenses->sum('exp_amt')
+                'expenses'=>$expenses->sum('exp_amt'),
+                'dailyCollection'=> ($daily_sales->sum('retailer_amt') + $invoice->sum('doc_consult_fee')) - $expenses->sum('exp_amt'),
+                'totalProfit'=>(($daily_sales->sum('retailer_amt') - $daily_sales->sum('wholesale_amt')) + $invoice->sum('doc_consult_fee')) - $expenses->sum('exp_amt')
             ];
 
             Mail::to('tbpliyanage@gmail.com')->send(new NotifyMail($details));

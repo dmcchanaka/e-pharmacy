@@ -26,7 +26,8 @@ class GrnController extends Controller
             ])
         ->whereNull('p.deleted_at')
         ->where('p.pro_name', 'LIKE', '%' . trim($term) . '%')
-        ->groupBy('p.pro_id');
+        ->groupBy('p.pro_id')
+        ->orderBy('p.pro_name','ASC');
 
         $products = $query->get();
         return $products;

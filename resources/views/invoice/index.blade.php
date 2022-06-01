@@ -203,8 +203,10 @@
                     </div>
                     <div class="form-group mt-sm-1 mb-sm-1">
                         <div class="">
+                            <input type="hidden" id="submit_type" name="submit_type" value="0" />
                             <button class="btn btn-secondary btn-sm" type="reset">Reset</button>
-                            <button type="button" id="add" class="btn btn-primary btn-sm" onclick="form_submit('add', 'invoice_form')">Submit</button>
+                            <button type="button" id="add" class="btn btn-primary btn-sm" onclick="form_submit('add', 'invoice_form')">Print</button>
+                            <button type="button" id="without_print" class="btn btn-danger btn-sm" onclick="form_submit('without_print', 'invoice_form')">Without Print</button>
                         </div>
                     </div>
                 </div>
@@ -233,14 +235,19 @@
 
     /* SUBMIT USING SPACE KEY */
     document.body.onkeyup = function(e){
-        if(e.keyCode == 32){
+        console.log(e.keyCode);
+        if(e.keyCode == 32 || e.keyCode == 18){ //32 => space, 18 => alt
             e.preventDefault();
   	        e.stopImmediatePropagation();
 
             try {
                 removeWhiteSpaces();
             } finally {
-                form_submit('add', 'invoice_form');
+                if(e.keyCode == 32){
+                    form_submit('add', 'invoice_form', 0);
+                } else if(e.keyCode == 18){
+                    form_submit('without_print', 'invoice_form', 1);
+                }
             }
         }
     }
@@ -316,7 +323,9 @@
             });
         }
         if (keyCode == 32 && $('#consultation_amt').val() > 0) {// press Space
-            form_submit('add', 'invoice_form');
+            form_submit('add', 'invoice_form', 0);
+        } else if(keyCode == 18 && $('#consultation_amt').val() > 0){
+            form_submit('without_print', 'invoice_form', 1);
         }
         calc_amount();
     }
@@ -366,7 +375,9 @@
             });
         }
         if (keyCode == 32 && $('#other_amt_' + num).val() > 0) {// press Space
-            form_submit('add', 'invoice_form');
+            form_submit('add', 'invoice_form', 0);
+        } else if(keyCode == 18 && $('#other_amt_' + num).val() > 0){
+            form_submit('without_print', 'invoice_form', 1);
         }
         calc_amount();
     }
@@ -733,7 +744,7 @@
                 });
             } else {
                 document.getElementById("product_name").focus();
-                form_submit('add', 'invoice_form');
+                form_submit('add', 'invoice_form', 0);
             }
         } else if(parseInt($('#qty_' + i).val()) > parseInt($('#stock_' + i).val()) && parseInt($('#stock_' + i).val())>0){
             var qty = parseFloat(document.getElementById('stock_' + i).value).toFixed(0);
@@ -780,6 +791,9 @@
             remove_item(i);
         }
         if (keyCode == 13 && $('#qty_' + i).val() > 0) {// press Enter
+            document.getElementById("product_name").focus();
+            generate_product();
+        } else if(keyCode == 18 && $('#qty_' + i).val() > 0){
             document.getElementById("product_name").focus();
             generate_product();
         }
@@ -913,7 +927,8 @@
         return valid;
     }
 
-    function form_submit(button_id, form_id) {
+    function form_submit(button_id, form_id, btn_type) {
+        $('#submit_type').val(btn_type);
         if (invoice_validation()) {
 
             $.confirm({
@@ -922,7 +937,7 @@
                 type: 'green',
                 buttons: {
                     Okey: {
-                        text: 'confirm',
+                        text: (btn_type == 0)?'save & Print': 'save',
                         btnClass: 'btn-blue',
                         keys: ['enter'],
                         action: function () {

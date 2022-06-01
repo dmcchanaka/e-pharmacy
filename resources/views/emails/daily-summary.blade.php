@@ -255,6 +255,11 @@
             font-weight: 700;
         }
 
+        .invoice .invoice-items .total-custom td {
+            border-top: 2px solid #333;
+            font-weight: 700;
+        }
+
         /* -------------------------------------
     RESPONSIVE AND MOBILE FRIENDLY STYLES
 ------------------------------------- */
@@ -354,12 +359,14 @@
                                                                                     <td class="alignright">{{ number_format($details['expenses'],2) }}
                                                                                     </td>
                                                                                 </tr>
-                                                                                {{-- <tr class="total">
-                                                                                    <td class="alignright"
-                                                                                        width="80%">Total</td>
-                                                                                    <td class="alignright">{{ $details['title'] }}
-                                                                                    </td>
-                                                                                </tr> --}}
+                                                                                <tr class="total-custom">
+                                                                                    <td width="80%">Daily Collection</td>
+                                                                                    <td class="alignright">{{ number_format($details['dailyCollection'],2) }}</td>
+                                                                                </tr>
+                                                                                <tr class="total">
+                                                                                    <td width="80%">Total Profit</td>
+                                                                                    <td class="alignright">{{ number_format($details['totalProfit'],2) }}</td>
+                                                                                </tr>
                                                                             </tbody>
                                                                         </table>
                                                                     </td>
