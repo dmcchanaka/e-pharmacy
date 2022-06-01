@@ -168,7 +168,7 @@
                                                 <td>
                                                     <input type="text" name="doc_free" id="doc_fee" class="col-md-12 form-control form-control-sm" value="Consultation fee" readonly />
                                                 </td>
-                                                <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="consultation_amt" name="consultation_amt" size="5" value="300.00" /></td>
+                                                <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="consultation_amt" name="consultation_amt" size="5" value="300.00" onkeyup="check_consult_fee(event);" /></td>
                                                 <td style="text-align: center;padding-top:15px">&nbsp;</td>
                                             </tr>
                                         </body>
@@ -185,7 +185,7 @@
                                                         @endforeach
                                                     </select>
                                                 </td>
-                                                <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="other_amt_1" name="other_amt_1" size="5" /></td>
+                                                <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="other_amt_1" name="other_amt_1" size="5" onkeyup="check_other_fee(event, '1');" /></td>
                                                 <td style="text-align: center;padding-top:15px">
                                                     <span class="fa fa-minus-circle fa-lg" style="cursor: pointer;" onclick="remove_other_item('1');"></span>
                                                 </td>
@@ -226,13 +226,149 @@
         document.getElementById("product_name").focus();
     });
 
+    function removeWhiteSpace(string){
+        finalstr = string.replace(/ /g, '');
+        return finalstr;
+    }
+
     /* SUBMIT USING SPACE KEY */
     document.body.onkeyup = function(e){
         if(e.keyCode == 32){
             e.preventDefault();
   	        e.stopImmediatePropagation();
+
+            try {
+                removeWhiteSpaces();
+            } finally {
+                form_submit('add', 'invoice_form');
+            }
+        }
+    }
+
+    function removeWhiteSpaces(){
+        //cunsult fee
+        var cunsultFeeStr = document.getElementById('consultation_amt').value;
+        consultFee = removeWhiteSpace(cunsultFeeStr);
+        var finalConsultFee = parseFloat(consultFee).toFixed(2);
+        $('#consultation_amt').val(finalConsultFee);
+
+        //other charges
+        var otherItemCount = $('#other_item_count').val();
+        if(otherItemCount>0){
+            for(var i = 1; i <= otherItemCount; i++){
+                if(typeof $('#other_type_' + i).val() != 'undefined'){
+                   var otherFeeStr = document.getElementById('other_amt_' + i).value;
+                
+                    otherFee = removeWhiteSpace(otherFeeStr);
+
+                    var finalOtherFee = parseFloat(otherFee).toFixed(2);
+                    if (isNaN(finalOtherFee)) {
+                        finalOtherFee = 0;
+                    }
+                    $('#other_amt_' + i).val(finalOtherFee);    
+                }
+            }
+        }
+    }
+
+    function check_consult_fee(evt){
+        evt.preventDefault();
+        evt.stopImmediatePropagation();
+        var keyCode;
+        if ("which" in evt) {// NN4 & FF &amp; Opera
+            keyCode = evt.which;
+        } else if ("keyCode" in evt) {// Safari & IE4+
+            keyCode = evt.keyCode;
+        } else if ("keyCode" in window.event) {// IE4+
+            keyCode = window.event.keyCode;
+        } else if ("which" in window.event) {
+            keyCode = evt.which;
+        } else {
+            //alert("the browser don't support");
+        }
+
+        var cunsultFeeStr = document.getElementById('consultation_amt').value;
+        consultFee = removeWhiteSpace(cunsultFeeStr);
+        var finalConsultFee = consultFee;
+        $('#consultation_amt').val(finalConsultFee);
+
+
+        if (!$('#consultation_amt').val().match(/^\d+(\.\d{0,2})?$/) && $('#consultation_amt').val() != "") {
+            var consultation_amt = parseFloat(document.getElementById('consultation_amt').value).toFixed(2);
+
+            if (isNaN(consultation_amt)) {
+                consultation_amt = 0;
+            }
+            $('#consultation_amt').val(consultation_amt);
+            $.alert({
+                title: 'Alert',
+                icon: 'fa fa-warning',
+                type: 'green',
+                content: 'Enter valid Consultant Fee',
+                buttons: {
+                    ok: {
+                        text: 'ok', // With spaces and symbols
+                        keys: ['enter'],
+                        action: function () {
+                        }
+                    }
+                }
+            });
+        }
+        if (keyCode == 32 && $('#consultation_amt').val() > 0) {// press Space
             form_submit('add', 'invoice_form');
         }
+        calc_amount();
+    }
+
+    function check_other_fee(evt, num){
+        evt.preventDefault();
+        evt.stopImmediatePropagation();
+        var keyCode;
+        if ("which" in evt) {// NN4 & FF &amp; Opera
+            keyCode = evt.which;
+        } else if ("keyCode" in evt) {// Safari & IE4+
+            keyCode = evt.keyCode;
+        } else if ("keyCode" in window.event) {// IE4+
+            keyCode = window.event.keyCode;
+        } else if ("which" in window.event) {
+            keyCode = evt.which;
+        } else {
+            //alert("the browser don't support");
+        }
+
+        var otherFeeStr = document.getElementById('other_amt_' + num).value;
+        otherFee = removeWhiteSpace(otherFeeStr);
+        var finalOtherFee = otherFee;
+        $('#other_amt_' + num).val(finalOtherFee);
+
+
+        if (!$('#other_amt_' + num).val().match(/^\d+(\.\d{0,2})?$/) && $('#other_amt_' + num).val() != "") {
+            var other_amt = parseFloat(document.getElementById('other_amt_' + num).value).toFixed(2);
+
+            if (isNaN(other_amt)) {
+                other_amt = 0;
+            }
+            $('#other_amt_' + num).val(other_amt);
+            $.alert({
+                title: 'Alert',
+                icon: 'fa fa-warning',
+                type: 'green',
+                content: 'Enter valid Other Fee',
+                buttons: {
+                    ok: {
+                        text: 'ok', // With spaces and symbols
+                        keys: ['enter'],
+                        action: function () {
+                        }
+                    }
+                }
+            });
+        }
+        if (keyCode == 32 && $('#other_amt_' + num).val() > 0) {// press Space
+            form_submit('add', 'invoice_form');
+        }
+        calc_amount();
     }
 
     function load_other_fees(num){
@@ -274,6 +410,7 @@
                 } else {
                     $('#other_amt_'+ num).val('');
                 }
+                $('#other_amt_'+ num).focus();
                 calc_amount();
             }
         });
@@ -297,7 +434,7 @@
                     + '<option value="0">SELECT</option>'
                 + '</select>'
             + '</td>'
-            + '<td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="other_amt_' + next_count + '" name="other_amt_' + next_count + '" size="5" readonly /></td>'
+            + '<td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="other_amt_' + next_count + '" name="other_amt_' + next_count + '" size="5" onkeyup="check_other_fee(event, '+ next_count +');" /></td>'
             + '<td style="text-align: center;padding-top:15px">'
                 + '<span class="fa fa-minus-circle fa-lg" style="cursor: pointer" onclick="remove_other_item(' + next_count + ');"></span>'
             + '</td>'
@@ -356,7 +493,6 @@
                 source: "{{ url('invoice/product') }}",
                 minLength: 1,
                 select: function (event, ui) {
-                    console.log('aaa ' +ui);
                     $("#product_name").val(ui.item.label);
                     $("#product_id").val(ui.item.id);
 
@@ -559,7 +695,6 @@
     }
 
     function check_qty(evt, i) {
-        console.log(evt);
         evt.preventDefault();
         evt.stopImmediatePropagation();
         var keyCode;
@@ -574,9 +709,6 @@
         } else {
             //alert("the browser don't support");
         }
-        // if (keyCode == 32 && $('#qty_' + i).val() > 0) {// press Space
-        //     document.getElementById("product_name").focus();
-        // }
         if (!$('#qty_' + i).val().match(/^(\d+)$/) && $('#qty_' + i).val() != "") {
             var qty = parseFloat(document.getElementById('qty_' + i).value).toFixed(0);
 
@@ -614,7 +746,15 @@
                 title: 'Alert',
                 icon: 'fa fa-warning',
                 type: 'green',
-                content: 'Stock is not enough'
+                content: 'Stock is not enough',
+                buttons: {
+                    ok: {
+                        text: 'ok', // With spaces and symbols
+                        keys: ['enter'],
+                        action: function () {
+                        }
+                    }
+                }
             });
         } else if(parseInt($('#stock_' + i).val())===0){
             var qty = parseFloat(document.getElementById('stock_' + i).value).toFixed(0);
@@ -627,7 +767,15 @@
                 title: 'Alert',
                 icon: 'fa fa-warning',
                 type: 'green',
-                content: 'Stock is not enough'
+                content: 'Stock is not enough',
+                buttons: {
+                    ok: {
+                        text: 'ok', // With spaces and symbols
+                        keys: ['enter'],
+                        action: function () {
+                        }
+                    }
+                }
             });
             remove_item(i);
         }
