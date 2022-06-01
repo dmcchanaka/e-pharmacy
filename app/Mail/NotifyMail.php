@@ -30,6 +30,6 @@ class NotifyMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('tst emails')->view('emails.daily-summary');
+        return $this->subject('Daily summary of citizens hospital (PVT) Ltd - '. date('Y-m-d') )->view('emails.daily-summary');
     }
 }
