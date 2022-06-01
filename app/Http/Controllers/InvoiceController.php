@@ -36,7 +36,8 @@ class InvoiceController extends Controller{
             ])
         ->whereNull('p.deleted_at')
         ->where('p.pro_name', 'LIKE', '%' . trim($term) . '%')
-        ->groupBy('p.pro_id');
+        ->groupBy('p.pro_id')
+        ->orderBy('p.pro_name','ASC');
 
         $products = $query->get();
         return $products;
@@ -192,8 +193,11 @@ class InvoiceController extends Controller{
 
             DB::commit();
 
-            // return redirect()->route('print_invoice',['id' => $lastInvoice->invoice_id]);
-            return redirect()->route('invoice')->with('success', 'RECORD HAS BEEN SUCCESSFULLY INSERTED!');
+            if($_REQUEST['submit_type'] == 0){
+                return redirect()->route('print_invoice',['id' => $lastInvoice->invoice_id]);
+            } elseif($_REQUEST['submit_type'] == 1){
+                return redirect()->route('invoice')->with('success', 'RECORD HAS BEEN SUCCESSFULLY INSERTED!');
+            }
 
         } catch (\Exception $e) {
             DB::rollback();
