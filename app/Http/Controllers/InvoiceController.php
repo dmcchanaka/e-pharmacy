@@ -70,7 +70,6 @@ class InvoiceController extends Controller{
     }
 
     public function store(Request $request){
-        // return $request;
         DB::beginTransaction();
         try {
             $added_by = Auth::user()->getKey();
@@ -85,15 +84,15 @@ class InvoiceController extends Controller{
             $invoice = Invoice::create([
                 'invoice_no'=>$inv_no,
                 'invoice_date'=>date('Y-m-d H:i:s'),
-                'invoice_gross_amt'=>$request->tot_amount,
-                'invoice_net_amt'=>$request->net_amount,
+                'invoice_gross_amt'=>str_replace(',', '', $request->tot_amount),
+                'invoice_net_amt'=>str_replace(',', '', $request->net_amount),
                 'doctor_id'=>$request->doctor_id,
                 'added_by'=>$added_by,
                 'price_option'=>$request->inv_type,
                 'payment_type'=>1,
-                'invoice_discount_per'=>$request->discount,
-                'invoice_discount'=>$request->discount_amt,
-                'doc_consult_fee'=>$request->consultation_amt
+                'invoice_discount_per'=>str_replace(',', '', $request->discount),
+                'invoice_discount'=>str_replace(',', '', $request->discount_amt),
+                'doc_consult_fee'=>str_replace(',', '', $request->consultation_amt)
             ]);
             $lastInvoice = Invoice::select('invoice_id', 'invoice_no')->where('added_by',$added_by)->latest()->first();
             $totalInvAmt = 0;
@@ -181,20 +180,20 @@ class InvoiceController extends Controller{
                     $invoiceOtherFee = InvoiceOtherFee::create([
                         'invoice_id'=>$lastInvoice->invoice_id,
                         'fee_id'=>$request['other_type_'.$j],
-                        'other_price'=>$request['other_amt_'.$j]
+                        'other_price'=>str_replace(',', '',$request['other_amt_'.$j])
                     ]);
                 }
             }
 
             $upInvoice = Invoice::find($lastInvoice->invoice_id);
             // $upInvoice->invoice_gross_amt = $totalInvAmt;
-            $upInvoice->invoice_other_amt = $otherPyments;
+            $upInvoice->invoice_other_amt = str_replace(',', '',$otherPyments);
             $upInvoice->save();
 
             DB::commit();
 
-            return redirect()->route('print_invoice',['id' => $lastInvoice->invoice_id]);
-            // return redirect()->route('invoice')->with('success', 'RECORD HAS BEEN SUCCESSFULLY INSERTED!');
+            // return redirect()->route('print_invoice',['id' => $lastInvoice->invoice_id]);
+            return redirect()->route('invoice')->with('success', 'RECORD HAS BEEN SUCCESSFULLY INSERTED!');
 
         } catch (\Exception $e) {
             DB::rollback();
