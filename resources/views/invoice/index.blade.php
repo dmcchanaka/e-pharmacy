@@ -884,24 +884,34 @@
                 type: 'green',
                 content: 'Please select doctor'
             });
-        } else if(parseInt($('#item_count').val()) === 1){
+        } else if((parseFloat($('#net_amount').val()) <= 0) || ($('#net_amount').val() == '')) {
             valid = false;
             $.alert({
                 title: 'Alert',
                 icon: 'fa fa-warning',
                 type: 'green',
-                content: 'Please enter atleast one item',
-                buttons: {
-                    ok: {
-                        text: 'ok', // With spaces and symbols
-                        keys: ['enter', 'a'],
-                        action: function () {
-                            document.getElementById("product_name").focus();
-                        }
-                    }
-                }
+                content: 'Your gross amount is zero.Please check again'
             });
-        } else {
+        }
+        // else if(parseInt($('#item_count').val()) === 1){
+        //     valid = false;
+        //     $.alert({
+        //         title: 'Alert',
+        //         icon: 'fa fa-warning',
+        //         type: 'green',
+        //         content: 'Please enter atleast one item',
+        //         buttons: {
+        //             ok: {
+        //                 text: 'ok', // With spaces and symbols
+        //                 keys: ['enter', 'a'],
+        //                 action: function () {
+        //                     document.getElementById("product_name").focus();
+        //                 }
+        //             }
+        //         }
+        //     });
+        // } 
+        else {
             var m = 1;
             for (m = 1; m <= parseInt($('#item_count').val()); m++) {
                 if (document.getElementById('pro_name_' + m) && ($('#pro_id_' + m).val() == "")) {
