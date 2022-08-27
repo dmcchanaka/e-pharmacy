@@ -667,6 +667,9 @@
                 item_id: $('#pro_id_'+ num).val()
             },
             success: function (data) {
+                if(data.stock < 100){
+                    document.getElementById("stock_" + num).style.backgroundColor  = "red";
+                }
                 if (data.stock > 0) {
                     var stock = data.stock;
                     $('#stock_' + num).val(stock);
