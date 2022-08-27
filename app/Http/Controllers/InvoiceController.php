@@ -162,11 +162,11 @@ class InvoiceController extends Controller{
                             /** */
                             $sold_qty -= $rp_remaining_qty;
                         }
-                        if((count($received_stk)==0 || $total_remain_qty < $request['qty_' . $i])){
-                            DB::rollback();
-                            $pro_name = Product::find($request['pro_id_' . $i]);
-                            return redirect()->route('invoice')->with('error', 'Stock is not enough to invoice '.$pro_name->pro_name.' product');
-                        }
+                    }
+                    if((count($received_stk)==0 || $total_remain_qty < $request['qty_' . $i])){
+                        DB::rollback();
+                        $pro_name = Product::find($request['pro_id_' . $i]);
+                        return redirect()->route('invoice')->with('error', 'Stock is not enough to invoice '.$pro_name->pro_name.' product');
                     }
                 }
             }
@@ -176,7 +176,7 @@ class InvoiceController extends Controller{
              */
             $otherPyments = 0;
             for ($j = 1; $j <= $request->other_item_count; $j++) {
-                if(isset($request['other_type_'.$j]) && $request['other_type_'.$j] != 0){
+                if(isset($request['other_type_'.$j]) && $request['other_type_'.$j] != 0 && $request['other_amt_'.$j]!=''){
                     $otherPyments += $request['other_amt_'.$j];
                     $invoiceOtherFee = InvoiceOtherFee::create([
                         'invoice_id'=>$lastInvoice->invoice_id,

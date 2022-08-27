@@ -168,7 +168,7 @@
                                                 <td>
                                                     <input type="text" name="doc_free" id="doc_fee" class="col-md-12 form-control form-control-sm" value="Consultation fee" readonly />
                                                 </td>
-                                                <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="consultation_amt" name="consultation_amt" size="5" value="300.00" onkeyup="check_consult_fee(event);" /></td>
+                                                <td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="consultation_amt" name="consultation_amt" size="5" value="0.00" onkeyup="check_consult_fee(event);" /></td>
                                                 <td style="text-align: center;padding-top:15px">&nbsp;</td>
                                             </tr>
                                         </body>
@@ -205,8 +205,8 @@
                         <div class="">
                             <input type="hidden" id="submit_type" name="submit_type" value="0" />
                             <button class="btn btn-secondary btn-sm" type="reset">Reset</button>
-                            <button type="button" id="add" class="btn btn-primary btn-sm" onclick="form_submit('add', 'invoice_form')">Print</button>
-                            <button type="button" id="without_print" class="btn btn-danger btn-sm" onclick="form_submit('without_print', 'invoice_form')">Without Print</button>
+                            <button type="button" id="add" class="btn btn-primary btn-sm" onclick="form_submit('add', 'invoice_form', 0)">Print</button>
+                            <button type="button" id="without_print" class="btn btn-danger btn-sm" onclick="form_submit('without_print', 'invoice_form', 1)">Without Print</button>
                         </div>
                     </div>
                 </div>
@@ -235,7 +235,6 @@
 
     /* SUBMIT USING SPACE KEY */
     document.body.onkeyup = function(e){
-        console.log(e.keyCode);
         if(e.keyCode == 32 || e.keyCode == 18){ //32 => space, 18 => alt
             e.preventDefault();
   	        e.stopImmediatePropagation();
@@ -306,7 +305,7 @@
             if (isNaN(consultation_amt)) {
                 consultation_amt = 0;
             }
-            $('#consultation_amt').val(consultation_amt);
+            $('#consultation_amt').val(consultation_amt.formatMoney(2, '.', ','));
             $.alert({
                 title: 'Alert',
                 icon: 'fa fa-warning',
@@ -850,11 +849,20 @@
 
         /*CONSULTATION FEE*/
         var consultFee = parseFloat(document.getElementById('consultation_amt').value).toFixed(2);
+        if (isNaN(consultFee)) {
+            consultFee = 0;
+            $('#consultation_amt').val(consultFee.formatMoney(2, '.', ','));
+        }
         var j = 1;
         var tot_other_amount = 0;
         for (j = 1; j <= parseFloat($('#other_item_count').val()); j++) {
             if (document.getElementById('other_type_' + j) && $('#other_amt_' + j).val() != "") {
                 tot_other_amount += parseFloat($('#other_amt_' + j).val());
+
+                if (isNaN(tot_other_amount)) {
+                    tot_other_amount = 0;
+                    $('#other_amt_' + j).val(tot_other_amount.formatMoney(2, '.', ','));
+                }
             }
         }
         netAmount = parseFloat(netAmount) + parseFloat(consultFee) + parseFloat(tot_other_amount);
