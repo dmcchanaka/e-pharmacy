@@ -72,6 +72,7 @@
                                     <th style="text-align: center">&nbsp</th>
                                     <th style="text-align: center">Description</th>
                                     <th style="text-align: center">Price</th>
+                                    <th style="text-align: center">Stock</th>
                                     <th style="text-align: center">Qty</th>
                                     <th style="text-align: center">Amount</th>
                                     <th style="text-align: center">&nbsp</th>
@@ -79,7 +80,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="5">
+                                    <td colspan="6">
                                         <div class="form-group row">
                                             <label class="col-lg-3 col-form-label">FIND OR SCAN ITEM OR RECEIPT</label>
                                             <div class="col-lg-9">
@@ -103,6 +104,7 @@
                                     <td colspan="1" style="text-align: right;padding-right: 5px">
                                         <input type="text" style="text-align: right;padding-right: 5px;font-weight:bold" class="col-md-12 form-control form-control-sm" id="tot_amount" name="tot_amount" size="10" readonly />
                                     </td>
+                                    <td>&nbsp;</td>
                                     <td>&nbsp;</td>
                                 </tr>
                             </tfoot>
@@ -156,6 +158,10 @@
             + '<td>'
                 +'<input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="price_' + num + '" name="price_' + num + '" size="5" readonly />'
                 +'<input type="hidden" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="prc_' + num + '" name="prc_' + num + '" size="5" />'
+            +'</td>'
+            + '<td>'
+                +'<input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="stock_' + num + '" name="stock_' + num + '" size="5" readonly />'
+                +'<input type="hidden" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="stk_' + num + '" name="stk_' + num + '" size="5" />'
             +'</td>'
             + '<td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="qty_' + num + '" name="qty_' + num + '" onkeyup="check_qty(event, '+ num +');" size="5" autocomplete="off" /></td>'
             + '<td><input type="text" style="text-align: right;padding-right: 5px" class="col-md-12 form-control form-control-sm" id="line_amt_' + num + '" name="line_amt_' + num + '" onkeyup="check_qty(event, '+ num +');" size="5" readonly /></td>'
@@ -220,6 +226,7 @@
                     $("#pro_id_" + num).val(ui.item.id);
 
                     load_price(num, ui.item.id);
+                    load_stock(num, ui.item.id);
 
                 }
             }
@@ -306,6 +313,37 @@
                 } else {
                     $('#price_' + num).val(0);
                     $('#prc_' + num).val(0);
+                }
+                $("#product_name").val("");
+                $("#product_id").val("");
+            }
+        });
+    }
+
+    /* LOAD PRODUCT STOCK */
+    function load_stock(num,item_id){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: "GET",
+            url: "{{ url('/invoice/stock') }}",
+            data: {
+                item_id: $('#pro_id_'+ num).val()
+            },
+            success: function (data) {
+                if(data.stock < 100){
+                    document.getElementById("stock_" + num).style.backgroundColor  = "red";
+                }
+                if (data.stock > 0) {
+                    var stock = data.stock;
+                    $('#stock_' + num).val(stock);
+                    $('#stk_' + num).val(stock);
+                } else {
+                    $('#stock_' + num).val(0);
+                    $('#stk_' + num).val(0);
                 }
                 $("#product_name").val("");
                 $("#product_id").val("");
