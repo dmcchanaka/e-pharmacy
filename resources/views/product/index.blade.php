@@ -336,9 +336,9 @@
                                 "_token": "{{ csrf_token() }}"
                             },
                             success: function (data) {
-                                console.log(data);
-                                setTimeout(location.reload(), 5000)
-                                // location.reload();
+                                setTimeout(
+                                    location.reload(), 
+                                5000);
                             }
                         });
                     }
