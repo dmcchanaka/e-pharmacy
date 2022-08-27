@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\Facades\DataTables;
 
 class ProductController extends Controller
@@ -116,12 +117,18 @@ class ProductController extends Controller
             // $product->deactivated_at = date('Y-m-d H:i:s');
             // $product->save();
             if($product){
-                return redirect('product')->with('success', 'RECORD HAS BEEN SUCCESSFULLY DELETED!');
+                Session::flash('success', __('RECORD HAS BEEN SUCCESSFULLY DELETED!'));
+                // return redirect('product')->with('success', 'RECORD HAS BEEN SUCCESSFULLY DELETED!');
             } else {
-                return redirect('product')->with('error', 'RECORD HAS NOT BEEN SUCCESSFULLY DELETED!');
+                Session::flash('error', __('RECORD HAS NOT BEEN SUCCESSFULLY DELETED!'));
+                // return redirect('product')->with('error', 'RECORD HAS NOT BEEN SUCCESSFULLY DELETED!');
             }
         } else {
-            return redirect('product')->with('error', 'SYSTEM IS NOT ALLOWING TO REMOVE THIS ITEM. THIS ITEM IS INCLUDING SOME INVOICE!');
+            Session::flash('error', __('SYSTEM IS NOT ALLOWING TO REMOVE THIS ITEM. THIS ITEM IS INCLUDING SOME INVOICE!'));
+            // return redirect('product')->with('error', 'SYSTEM IS NOT ALLOWING TO REMOVE THIS ITEM. THIS ITEM IS INCLUDING SOME INVOICE!');
         }
+        return response()->json([
+            'success' => true,
+        ]);
     }
 }
