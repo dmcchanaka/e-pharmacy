@@ -112,6 +112,7 @@
                                     <th style="background-color: #1ab394;color:#fff">Gross Amount</th>
                                     <th style="background-color: #1ab394;color:#fff">Net Amount</th>
                                     <th style="background-color: #1ab394;color:#fff">View</th>
+                                    <th style="background-color: #1ab394;color:#fff">Print</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -156,7 +157,8 @@ $('#invoice_table').DataTable({
         { data: 'doctor_name', name: 'doctor_name' },
         { data: 'invoice_gross_amt', name: 'invoice_gross_amt', className: 'text-right' },
         { data: 'invoice_net_amt', name: 'invoice_net_amt', className: 'text-right' },
-        { data: 'display', name: 'display', className: 'text-center' }
+        { data: 'display', name: 'display', className: 'text-center' },
+        { data: 'print', name: 'print', className: 'text-center' }
     ],
     order: [
         0, 'desc'

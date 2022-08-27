@@ -348,7 +348,12 @@ class InvoiceController extends Controller{
                 <a href="' . url('display_invoice', $invQuery->invoice_id) . '" target="_blank"><i class="fa fa-list-alt fa-lg"></i></a>
             </div>';
         })
-        ->rawColumns(['payment_type','display'])
+        ->addColumn('print', function ($invQuery) {
+            return '<div style="text-align:center">
+                <a href="' . url('print_invoice', $invQuery->invoice_id) . '" target="_blank"><i class="fa fa-print fa-lg"></i></a>
+            </div>';
+        })
+        ->rawColumns(['payment_type','display', 'print'])
         ->filter(function ($query) use ($request) {
             if ($request->has('doctor_id') && $request->get('doctor_id') != "0") {
                 $query->where('i.doctor_id', '=', "{$request->get('doctor_id')}");
