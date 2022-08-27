@@ -59,6 +59,11 @@ class GrnController extends Controller
         return $price;
     }
 
+    public function search_product_stock(Request $request){
+        $received_stk = ReceivedStock::where('pro_id',$request->item_id)->where('rs_remaining_qty','>',0)->get();
+        return ['stock'=>$received_stk->sum('rs_remaining_qty')];
+    }
+
     public function store(Request $request){
 
         DB::beginTransaction();
